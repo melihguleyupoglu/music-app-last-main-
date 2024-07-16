@@ -164,6 +164,7 @@ app.post('/refresh', async (req, res) => {
       return res.status(403).send({ message: 'Invalid refresh token' });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     jwt.verify(refreshToken, REFRESH_SECRET_KEY, (err, decoded) => {
       if (err) {
         return res.status(403).send({ message: 'Invalid refresh token2' });

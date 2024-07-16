@@ -9,6 +9,7 @@ import LoginForm from './LoginForm.vue'
 import UserHome from './UserHome.vue'
 import CallbackSpotify from './CallbackSpotify.vue'
 import PlayerView from './PlayerView.vue'
+import SpotifyPlayback from './SpotifyPlayback.vue'
 import api from './services/api'
 
 
@@ -20,6 +21,7 @@ const routes = [
   { path: '/home', component: UserHome, meta: { requiresAuth: true } },
   { path: '/callback', component: CallbackSpotify},
   {path: '/player', component: PlayerView},
+  {path: '/spotify-player', component: SpotifyPlayback}
 ]
 
 const router = createRouter({
