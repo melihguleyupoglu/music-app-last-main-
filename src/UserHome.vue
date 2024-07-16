@@ -16,10 +16,7 @@ const authorizeSoundcloud = () => {}
     <h2 class="welcome-message">Welcome, to get started please link your accounts.</h2>
   </div>
   <div class="button-container">
-    <!-- <button class="button yt-button" @click="linkYoutube">Link your youtube account</button> -->
-    <button class="button sp-button" @click="authorizeSpotify">
-      Link your spotify account (Needs premium)
-    </button>
+    <button class="button sp-button" @click="authorizeSpotify">Link your spotify account</button>
     <button class="button sc-button" @click="authorizeSoundcloud">
       Link your soundcloud account
     </button>
