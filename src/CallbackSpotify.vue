@@ -1,8 +1,12 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '@/store/auth.ts'
+import { mainAuthStore } from './main.ts'
 
+// const authStore = useAuthStore()
 const router = useRouter()
+
 onMounted(() => {
   const hash = window.location.hash.substring(1)
   const params = new URLSearchParams(hash)
@@ -10,9 +14,10 @@ onMounted(() => {
 
   if (accessToken) {
     localStorage.setItem('spotify_access_token', accessToken)
+    mainAuthStore.setSpotifyAccessToken(accessToken)
     console.log(accessToken)
 
-    router.push({ path: '/player' })
+    router.push({ path: '/stats' })
   } else {
     console.error("Access token hasn't received")
   }

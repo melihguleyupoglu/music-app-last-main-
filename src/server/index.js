@@ -168,7 +168,6 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
             case 5:
                 _b.sent();
                 res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
-                console.log(refreshToken, accessToken);
                 return [3 /*break*/, 7];
             case 6:
                 error_1 = _b.sent();
@@ -264,11 +263,12 @@ app.post('/refresh', function (req, res) { return __awaiter(void 0, void 0, void
             case 2:
                 user_1 = _a.sent();
                 if (!user_1) {
-                    return [2 /*return*/, res.status(403).send({ message: 'Invalid refresh token' })];
+                    return [2 /*return*/, res.status(403).send({ message: 'Refresh token expired' })];
                 }
+                // eslint-disable-next-line @typescript-eslint/no-unused-vars
                 jwt.verify(refreshToken, REFRESH_SECRET_KEY, function (err, decoded) {
                     if (err) {
-                        return res.status(403).send({ message: 'Invalid refresh token2' });
+                        return res.status(403).send({ message: 'Wrong refresh token' });
                     }
                     var newAccessToken = generateAccessToken(user_1.username);
                     res.status(200).json({ accessToken: newAccessToken });
@@ -282,6 +282,12 @@ app.post('/refresh', function (req, res) { return __awaiter(void 0, void 0, void
         }
     });
 }); });
+app.post('/renew-refresh-token', function (req, res) {
+    var username = req.body.username;
+    var newRefreshToken = generateRefreshToken(username);
+    var newAccesToken = generateAccessToken(username);
+    res.status(200).json({ refresh_token: newRefreshToken, access_token: newAccesToken });
+});
 app.listen(3000, function () { return console.log('Server is running on port 3000'); });
 function createSchema() {
     return __awaiter(this, void 0, void 0, function () {

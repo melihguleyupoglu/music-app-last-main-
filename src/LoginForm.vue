@@ -1,9 +1,13 @@
 <script setup lang="ts">
-import axios from 'axios';
-import Swal from 'sweetalert2';
+import axios from 'axios'
+import Swal from 'sweetalert2'
 import { ref } from 'vue'
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
+// import { useAuthStore } from '@/store/auth.ts'
 // import api from '../src/services/api.js'
+import { mainAuthStore } from './main.ts'
+
+// const authStore = useAuthStore()
 const router = useRouter()
 
 const username = ref('')
@@ -13,30 +17,31 @@ console.log(username, password)
 
 const handleLogin = async (e) => {
   e.preventDefault()
-  console.log(username,password)
+  console.log(username, password)
   try {
-    const response = await axios.post('http://localhost:3000/login', {username: username.value, password: password.value})
+    const response = await axios.post('http://localhost:3000/login', {
+      username: username.value,
+      password: password.value
+    })
     console.log(response.data)
-    if(response.status === 200) {
+    if (response.status === 200) {
       router.push('/home')
-      
-      const accessToken = response.data.accessToken;
-      const refreshToken = response.data.refreshToken;
 
-      localStorage.setItem('access_token', accessToken);
-      localStorage.setItem('refresh_token', refreshToken);
+      const accessToken = response.data.accessToken
+      const refreshToken = response.data.refreshToken
+
+      mainAuthStore.setAccessToken(accessToken)
+      mainAuthStore.setRefreshToken(refreshToken)
     }
-  }
-  catch(err:any){
+  } catch (err: any) {
     Swal.fire({
-      icon:'error',
-      title:'Oops',
+      icon: 'error',
+      title: 'Oops',
       text: err
     })
     console.log(err)
   }
 }
-
 </script>
 
 <template>
