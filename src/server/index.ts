@@ -8,6 +8,10 @@ const jwt = require('jsonwebtoken')
 // const crypto = require('crypto')
 // const nodeMailer = require('nodemailer')
 const bcrypt = require('bcrypt')
+const { promisify } = require('util')
+
+const verifyToken = promisify(jwt.verify)
+const decodeToken = promisify(jwt.decode)
 
 const ACCESS_SECRET_KEY =
   'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDE3Mjk0MywiaWF0IjoxNzIwMTcyOTQzfQ.YitGYvsMWMBRc22SWfC3HvNLN9WRaNM9QslDBZAXWc8'
@@ -15,11 +19,11 @@ const REFRESH_SECRET_KEY =
   'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDUxNjA3NywiaWF0IjoxNzIwNTE2MDc3fQ.uswAHArLKhMHkZ3f-N-hH4Ia5d6vFwOxe8eP3pA8HYs'
 
 const generateAccessToken = (username) => {
-  return jwt.sign({ username }, ACCESS_SECRET_KEY, { expiresIn: '15m' })
+  return jwt.sign({ username }, ACCESS_SECRET_KEY, { expiresIn: '1m' })
 }
 
 const generateRefreshToken = (username) => {
-  return jwt.sign({ username }, REFRESH_SECRET_KEY, { expiresIn: '7d' })
+  return jwt.sign({ username }, REFRESH_SECRET_KEY, { expiresIn: '1d' })
 }
 
 const hashPassword = async (password: string) => {
@@ -88,7 +92,9 @@ app.post('/login', async (req, res) => {
       const accessToken = generateAccessToken(username)
       const refreshToken = generateRefreshToken(username)
       try {
-        await knex('users').where('username', username).update({ refresh_token: refreshToken })
+        await knex('users')
+          .where('username', username)
+          .update({ refresh_token: refreshToken, access_token: accessToken })
 
         res.status(200).json({ accessToken, refreshToken })
         // console.log(refreshToken, accessToken);
@@ -149,7 +155,6 @@ app.post('/signup', async (req, res) => {
 
 app.post('/refresh', async (req, res) => {
   const { refresh_token: refreshToken } = req.body
-  // console.log(refreshToken);
 
   if (!refreshToken) {
     return res.status(401).send({ message: 'Refresh token is required' })
@@ -162,17 +167,67 @@ app.post('/refresh', async (req, res) => {
       return res.status(403).send({ message: 'Invalid refresh token' })
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    jwt.verify(refreshToken, REFRESH_SECRET_KEY, (err, decoded) => {
-      if (err) {
-        return res.status(403).send({ message: 'Invalid refresh token2' })
-      }
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const decoded = await verifyToken(refreshToken, REFRESH_SECRET_KEY)
 
       const newAccessToken = generateAccessToken(user.username)
+      await knex('users').where('username', user.username).update('access_token', newAccessToken)
+
       res.status(200).json({ accessToken: newAccessToken })
-    })
+    } catch (err) {
+      return res.status(403).send({ message: 'Invalid refresh token' })
+    }
   } catch (error) {
-    res.status(500).send({ message: 'Server error' + error })
+    res.status(500).send({ message: 'Server error: ' + error })
+  }
+})
+
+app.post('/refresh-token', async (req, res) => {
+  const { accessToken } = req.body
+
+  if (!accessToken) {
+    return res.status(401).json({ message: 'Access token is required' })
+  }
+
+  let decoded
+  try {
+    decoded = jwt.decode(accessToken) // doğrudan jwt.decode kullanıyoruz
+    if (!decoded) {
+      throw new Error('Invalid access token')
+    }
+  } catch (error) {
+    return res.status(400).json({ message: 'Invalid access token' })
+  }
+
+  const username = decoded.username
+
+  try {
+    const user = await knex('users').where('username', username).first()
+
+    if (!user) {
+      return res.status(403).json({ message: 'User not found' })
+    }
+
+    const refreshToken = user.refresh_token
+
+    if (!refreshToken) {
+      return res.status(403).json({ message: 'Invalid refresh token' })
+    }
+
+    try {
+      jwt.verify(refreshToken, REFRESH_SECRET_KEY) // doğrudan jwt.verify kullanıyoruz
+    } catch (err) {
+      return res.status(403).json({ message: 'Invalid refresh token' })
+    }
+
+    const newAccessToken = generateAccessToken(username)
+    await knex('users').where('username', username).update('access_token', newAccessToken)
+
+    return res.status(200).json({ accessToken: newAccessToken })
+  } catch (error) {
+    console.error('Server error:', error)
+    return res.status(500).json({ message: 'Server error' })
   }
 })
 
@@ -190,6 +245,7 @@ async function createSchema() {
     table.string('hashed')
     table.string('salt')
     table.string('refresh_token')
+    table.string('access_token')
   })
 }
 

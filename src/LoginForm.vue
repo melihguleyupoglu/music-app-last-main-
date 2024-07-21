@@ -5,7 +5,7 @@ import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 // import { useAuthStore } from '@/store/auth.ts'
 // import api from '../src/services/api.js'
-import { mainAuthStore } from './main.ts'
+import { mainAuthStore } from './main'
 
 // const authStore = useAuthStore()
 const router = useRouter()
@@ -29,6 +29,9 @@ const handleLogin = async (e) => {
 
       const accessToken = response.data.accessToken
       const refreshToken = response.data.refreshToken
+
+      localStorage.setItem('access_token', accessToken)
+      localStorage.setItem('refresh_token', refreshToken)
 
       mainAuthStore.setAccessToken(accessToken)
       mainAuthStore.setRefreshToken(refreshToken)

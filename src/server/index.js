@@ -61,13 +61,16 @@ var jwt = require('jsonwebtoken');
 // const crypto = require('crypto')
 // const nodeMailer = require('nodemailer')
 var bcrypt = require('bcrypt');
+var promisify = require('util').promisify;
+var verifyToken = promisify(jwt.verify);
+var decodeToken = promisify(jwt.decode);
 var ACCESS_SECRET_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDE3Mjk0MywiaWF0IjoxNzIwMTcyOTQzfQ.YitGYvsMWMBRc22SWfC3HvNLN9WRaNM9QslDBZAXWc8';
 var REFRESH_SECRET_KEY = 'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDUxNjA3NywiaWF0IjoxNzIwNTE2MDc3fQ.uswAHArLKhMHkZ3f-N-hH4Ia5d6vFwOxe8eP3pA8HYs';
 var generateAccessToken = function (username) {
-    return jwt.sign({ username: username }, ACCESS_SECRET_KEY, { expiresIn: '15m' });
+    return jwt.sign({ username: username }, ACCESS_SECRET_KEY, { expiresIn: '1m' });
 };
 var generateRefreshToken = function (username) {
-    return jwt.sign({ username: username }, REFRESH_SECRET_KEY, { expiresIn: '7d' });
+    return jwt.sign({ username: username }, REFRESH_SECRET_KEY, { expiresIn: '1d' });
 };
 var hashPassword = function (password) { return __awaiter(void 0, void 0, void 0, function () {
     var saltRounds, salt, hash, err_1;
@@ -164,7 +167,9 @@ app.post('/login', function (req, res) { return __awaiter(void 0, void 0, void 0
                 _b.label = 4;
             case 4:
                 _b.trys.push([4, 6, , 7]);
-                return [4 /*yield*/, knex('users').where('username', username).update({ refresh_token: refreshToken })];
+                return [4 /*yield*/, knex('users')
+                        .where('username', username)
+                        .update({ refresh_token: refreshToken, access_token: accessToken })];
             case 5:
                 _b.sent();
                 res.status(200).json({ accessToken: accessToken, refreshToken: refreshToken });
@@ -247,47 +252,98 @@ app.post('/signup', function (req, res) { return __awaiter(void 0, void 0, void 
     });
 }); });
 app.post('/refresh', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var refreshToken, user_1, error_4;
+    var refreshToken, user, decoded, newAccessToken, err_2, error_4;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 refreshToken = req.body.refresh_token;
-                // console.log(refreshToken);
                 if (!refreshToken) {
                     return [2 /*return*/, res.status(401).send({ message: 'Refresh token is required' })];
                 }
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 8, , 9]);
                 return [4 /*yield*/, knex('users').where('refresh_token', refreshToken).first()];
             case 2:
-                user_1 = _a.sent();
-                if (!user_1) {
-                    return [2 /*return*/, res.status(403).send({ message: 'Refresh token expired' })];
+                user = _a.sent();
+                if (!user) {
+                    return [2 /*return*/, res.status(403).send({ message: 'Invalid refresh token' })];
                 }
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                jwt.verify(refreshToken, REFRESH_SECRET_KEY, function (err, decoded) {
-                    if (err) {
-                        return res.status(403).send({ message: 'Wrong refresh token' });
-                    }
-                    var newAccessToken = generateAccessToken(user_1.username);
-                    res.status(200).json({ accessToken: newAccessToken });
-                });
-                return [3 /*break*/, 4];
+                _a.label = 3;
             case 3:
+                _a.trys.push([3, 6, , 7]);
+                return [4 /*yield*/, verifyToken(refreshToken, REFRESH_SECRET_KEY)];
+            case 4:
+                decoded = _a.sent();
+                newAccessToken = generateAccessToken(user.username);
+                return [4 /*yield*/, knex('users').where('username', user.username).update('access_token', newAccessToken)];
+            case 5:
+                _a.sent();
+                res.status(200).json({ accessToken: newAccessToken });
+                return [3 /*break*/, 7];
+            case 6:
+                err_2 = _a.sent();
+                return [2 /*return*/, res.status(403).send({ message: 'Invalid refresh token' })];
+            case 7: return [3 /*break*/, 9];
+            case 8:
                 error_4 = _a.sent();
-                res.status(500).send({ message: 'Server error' + error_4 });
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                res.status(500).send({ message: 'Server error: ' + error_4 });
+                return [3 /*break*/, 9];
+            case 9: return [2 /*return*/];
         }
     });
 }); });
-app.post('/renew-refresh-token', function (req, res) {
-    var username = req.body.username;
-    var newRefreshToken = generateRefreshToken(username);
-    var newAccesToken = generateAccessToken(username);
-    res.status(200).json({ refresh_token: newRefreshToken, access_token: newAccesToken });
-});
+app.post('/refresh-token', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var accessToken, decoded, username, user, refreshToken, newAccessToken, error_5;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                accessToken = req.body.accessToken;
+                if (!accessToken) {
+                    return [2 /*return*/, res.status(401).json({ message: 'Access token is required' })];
+                }
+                try {
+                    decoded = jwt.decode(accessToken); // doğrudan jwt.decode kullanıyoruz
+                    if (!decoded) {
+                        throw new Error('Invalid access token');
+                    }
+                }
+                catch (error) {
+                    return [2 /*return*/, res.status(400).json({ message: 'Invalid access token' })];
+                }
+                username = decoded.username;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 4, , 5]);
+                return [4 /*yield*/, knex('users').where('username', username).first()];
+            case 2:
+                user = _a.sent();
+                if (!user) {
+                    return [2 /*return*/, res.status(403).json({ message: 'User not found' })];
+                }
+                refreshToken = user.refresh_token;
+                if (!refreshToken) {
+                    return [2 /*return*/, res.status(403).json({ message: 'Invalid refresh token' })];
+                }
+                try {
+                    jwt.verify(refreshToken, REFRESH_SECRET_KEY); // doğrudan jwt.verify kullanıyoruz
+                }
+                catch (err) {
+                    return [2 /*return*/, res.status(403).json({ message: 'Invalid refresh token' })];
+                }
+                newAccessToken = generateAccessToken(username);
+                return [4 /*yield*/, knex('users').where('username', username).update('access_token', newAccessToken)];
+            case 3:
+                _a.sent();
+                return [2 /*return*/, res.status(200).json({ accessToken: newAccessToken })];
+            case 4:
+                error_5 = _a.sent();
+                console.error('Server error:', error_5);
+                return [2 /*return*/, res.status(500).json({ message: 'Server error' })];
+            case 5: return [2 /*return*/];
+        }
+    });
+}); });
 app.listen(3000, function () { return console.log('Server is running on port 3000'); });
 function createSchema() {
     return __awaiter(this, void 0, void 0, function () {
@@ -305,6 +361,7 @@ function createSchema() {
                             table.string('hashed');
                             table.string('salt');
                             table.string('refresh_token');
+                            table.string('access_token');
                         })];
                 case 2:
                     _a.sent();

@@ -27,17 +27,29 @@ const router = createRouter({
 
 const pinia = createPinia()
 
+const app1 = createApp(App)
+
+app1.use(router)
+app1.use(pinia)
+
+export const mainAuthStore = useAuthStore()
+
 router.beforeEach((to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     const accessToken = mainAuthStore.getAccessToken
     const refreshToken = mainAuthStore.getRefreshToken
 
     console.log(accessToken)
+    console.log(refreshToken)
     console.log(api.isTokenExpired(accessToken))
 
     if (!accessToken || api.isTokenExpired(accessToken)) {
       if (!api.isRefreshTokenExpired(refreshToken)) {
-        api.refreshAccessToken()
+        const newAccessToken = api.refreshAccessToken()
+        console.log(newAccessToken)
+        if (newAccessToken) {
+          next()
+        }
       } else {
         if (to.path !== '/login') {
           return next('/login')
@@ -50,11 +62,5 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
-
-const app1 = createApp(App)
-
-app1.use(router)
-app1.use(pinia)
-export const mainAuthStore = useAuthStore()
 
 app1.mount('#app')

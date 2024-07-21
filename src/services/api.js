@@ -1,94 +1,91 @@
-import axios from 'axios';
-import { jwtDecode } from "jwt-decode";
+import axios from 'axios'
+import { jwtDecode } from 'jwt-decode'
+import { mainAuthStore } from '../main'
 
 const api = axios.create({
-    baseURL: 'http://localhost:3000',
-});
+  baseURL: 'http://localhost:3000'
+})
 
-
-const getAccessToken = () => localStorage.getItem('access_token');
-const getRefreshToken = () => localStorage.getItem('refresh_token');
-const setAccessToken = (token) => localStorage.setItem('access_token', token);
-
+const getAccessToken = () => mainAuthStore.getAccessToken
+// const setAccessToken = (token) => mainAuthStore.setAccessToken(token)
 
 async function refreshAccessToken() {
-    try {
-        const refreshToken = getRefreshToken();
-        console.log(refreshToken);
-        const response = await axios.post(`http://localhost:3000/refresh`, {
-            refresh_token: refreshToken
-        });
-        setAccessToken(response.data.accessToken);
-        return response.data.accessToken;
-    } catch (error) {
-        console.error('Error refreshing access token:', error);
-        return null;
-    }
+  try {
+    const accessToken = getAccessToken()
+    const response = await axios.post('http://localhost:3000/refresh-token', { accessToken })
+    mainAuthStore.setAccessToken(response.data.accessToken)
+    return response.data.accessToken
+  } catch (error) {
+    console.error('Error refreshing access token: ', error)
+    mainAuthStore.clearTokens()
+    return null
+  }
 }
 
-
-api.interceptors.request.use(config => {
-    const token = getAccessToken();
-    if (token) {
-        if (isTokenExpired(token)) {
-            return refreshAccessToken().then(newToken => {
-                if (newToken) {
-                    config.headers['Authorization'] = `Bearer ${newToken}`;
-                }
-                return config;
-            });
-        } else {
-            config.headers['Authorization'] = `Bearer ${token}`;
-        }
+api.interceptors.request.use(
+  async (config) => {
+    if (mainAuthStore.access_token && isTokenExpired(mainAuthStore.access_token)) {
+      const newToken = await refreshAccessToken()
+      if (newToken) {
+        config.headers['Authorization'] = `Bearer ${newToken}`
+      }
+    } else if (mainAuthStore.access_token) {
+      config.headers['Authorization'] = `Bearer ${mainAuthStore.access_token}`
     }
-    return config;
-}, error => {
-    return Promise.reject(error);
-});
+
+    return config
+  },
+  (error) => {
+    return Promise.reject(error)
+  }
+)
 
 // Response interceptor ile token yenileme
-api.interceptors.response.use(response => {
-    return response;
-}, async error => {
-    const originalRequest = error.config;
+api.interceptors.response.use(
+  (response) => {
+    return response
+  },
+  async (error) => {
+    const originalRequest = error.config
 
     if (error.response.status === 401 && !originalRequest._retry) {
-        originalRequest._retry = true;
-        const newAccessToken = await refreshAccessToken();
-        if (newAccessToken) {
-            axios.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-            return api(originalRequest);
-        }
+      originalRequest._retry = true
+      const newAccessToken = await refreshAccessToken()
+      if (newAccessToken) {
+        api.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`
+        return api(originalRequest)
+      }
     }
-    return Promise.reject(error);
-});
+    return Promise.reject(error)
+  }
+)
 
 // Access token'ın süresini kontrol eden fonksiyon
 function isTokenExpired(token) {
-    if (!token) return true;
+  if (!token) return true
 
-    const decoded = jwtDecode(token);
-    const currentTimeInSeconds = Date.now() / 1000;
+  const decoded = jwtDecode(token)
+  const currentTimeInSeconds = Date.now() / 1000
 
-    // Token'ın geçerliliği currentTimeInSeconds zamanına göre kontrol edilir
-    return decoded.exp < currentTimeInSeconds;
+  // Token'ın geçerliliği currentTimeInSeconds zamanına göre kontrol edilir
+  return decoded.exp < currentTimeInSeconds
 }
 
 function isRefreshTokenExpired(token) {
-    if (!token) return true;
+  if (!token) return true
 
-    const decoded = jwtDecode(token);
-    const currentTimeInSeconds = Date.now() / 1000;
+  const decoded = jwtDecode(token)
+  const currentTimeInSeconds = Date.now() / 1000
 
-    // Token'ın geçerliliği currentTimeInSeconds zamanına göre kontrol edilir
-    return decoded.exp < currentTimeInSeconds;
+  // Token'ın geçerliliği currentTimeInSeconds zamanına göre kontrol edilir
+  return decoded.exp < currentTimeInSeconds
 }
 
 // isTokenExpired fonksiyonunu export et
-api.isTokenExpired = isTokenExpired;
+api.isTokenExpired = isTokenExpired
 
-api.isRefreshTokenExpired = isRefreshTokenExpired;
+api.isRefreshTokenExpired = isRefreshTokenExpired
 
-api.refreshAccessToken = refreshAccessToken;
+api.refreshAccessToken = refreshAccessToken
 
-export default api;
+export default api
