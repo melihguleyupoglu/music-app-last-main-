@@ -34,29 +34,31 @@ app1.use(pinia)
 
 export const mainAuthStore = useAuthStore()
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const accessToken = mainAuthStore.getAccessToken
-    const refreshToken = mainAuthStore.getRefreshToken
+    const accessToken = mainAuthStore.access_token
 
-    console.log(accessToken)
-    console.log(refreshToken)
-    console.log(api.isTokenExpired(accessToken))
+    if ((to.path === '/' || to.path === '/login' || to.path === '/signup') && accessToken) {
+      return next('/')
+    }
 
-    if (!accessToken || api.isTokenExpired(accessToken)) {
-      if (!api.isRefreshTokenExpired(refreshToken)) {
-        const newAccessToken = api.refreshAccessToken()
-        console.log(newAccessToken)
-        if (newAccessToken) {
-          next()
-        }
+    try {
+      const verifyResponse = await api.verifyAccessToken()
+
+      if (verifyResponse && verifyResponse.message === 'Access token is valid') {
+        next()
       } else {
-        if (to.path !== '/login') {
-          return next('/login')
+        const newAccessToken = await api.refreshAccessToken()
+        if (newAccessToken) {
+          mainAuthStore.setAccessToken(newAccessToken)
+          next()
+        } else {
+          next('/login')
         }
       }
-    } else {
-      next()
+    } catch (error) {
+      console.error('Error in route guard:', error)
+      next('/login')
     }
   } else {
     next()

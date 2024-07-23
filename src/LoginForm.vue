@@ -34,7 +34,7 @@ const handleLogin = async (e) => {
       localStorage.setItem('refresh_token', refreshToken)
 
       mainAuthStore.setAccessToken(accessToken)
-      mainAuthStore.setRefreshToken(refreshToken)
+      // mainAuthStore.setRefreshToken(refreshToken)
     }
   } catch (err: any) {
     Swal.fire({

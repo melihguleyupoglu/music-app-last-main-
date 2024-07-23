@@ -2,6 +2,7 @@ require('dotenv').config()
 import { Model } from 'objection'
 import Knex from 'knex'
 const bodyParser = require('body-parser')
+const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
@@ -11,6 +12,7 @@ const bcrypt = require('bcrypt')
 const { promisify } = require('util')
 
 const verifyToken = promisify(jwt.verify)
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const decodeToken = promisify(jwt.decode)
 
 const ACCESS_SECRET_KEY =
@@ -18,12 +20,12 @@ const ACCESS_SECRET_KEY =
 const REFRESH_SECRET_KEY =
   'eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTcyMDUxNjA3NywiaWF0IjoxNzIwNTE2MDc3fQ.uswAHArLKhMHkZ3f-N-hH4Ia5d6vFwOxe8eP3pA8HYs'
 
-const generateAccessToken = (username) => {
-  return jwt.sign({ username }, ACCESS_SECRET_KEY, { expiresIn: '1m' })
+const generateAccessToken = (username, userId) => {
+  return jwt.sign({ username: username, userId: userId }, ACCESS_SECRET_KEY, { expiresIn: '15m' })
 }
 
-const generateRefreshToken = (username) => {
-  return jwt.sign({ username }, REFRESH_SECRET_KEY, { expiresIn: '1d' })
+const generateRefreshToken = (username, userId) => {
+  return jwt.sign({ username: username, userId: userId }, REFRESH_SECRET_KEY, { expiresIn: '1d' })
 }
 
 const hashPassword = async (password: string) => {
@@ -75,37 +77,55 @@ class User extends Model {
 const app = express()
 app.disable('x-powered-by')
 app.use(bodyParser.json())
-app.use(cors())
+app.use(cookieParser())
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Frontend'in URL'si
+    credentials: true // Cookie'lerin gönderilmesine izin ver
+  })
+)
 
 app.post('/login', async (req, res) => {
   const { username, password } = req.body
   try {
-    const storedHashPassword = await knex.select('hashed').from('users').where('username', username)
-
-    if (storedHashPassword.length === 0) {
-      res.status(404).send({ message: 'Kullanıcı bulunamadı' })
+    const user = await knex('users').where('username', username).first()
+    if (!user) {
+      res.status(404).send({ message: 'User not found' })
       return
     }
 
-    const match = await bcrypt.compare(password, storedHashPassword[0].hashed)
+    const match = await bcrypt.compare(password, user.hashed)
     if (match) {
-      const accessToken = generateAccessToken(username)
-      const refreshToken = generateRefreshToken(username)
+      const accessToken = generateAccessToken(username, user.id)
+      const refreshToken = generateRefreshToken(username, user.id)
+
       try {
         await knex('users')
           .where('username', username)
           .update({ refresh_token: refreshToken, access_token: accessToken })
 
-        res.status(200).json({ accessToken, refreshToken })
+        res.cookie('access_token', accessToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'Lax'
+        })
+
+        res.cookie('refresh_token', refreshToken, {
+          httpOnly: true,
+          secure: false,
+          sameSite: 'Lax'
+        })
+
+        res.status(200).json({ message: 'Login successful' })
         // console.log(refreshToken, accessToken);
       } catch (error) {
-        res.status(500).send({ message: 'Veritabanı hatası: ' + error })
+        res.status(500).send({ message: 'Database error: ' + error })
       }
     } else {
-      res.status(401).send({ message: 'Şifreler eşleşmiyor' })
+      res.status(401).send({ message: 'Passwords are not matching' })
     }
   } catch (error) {
-    res.status(500).send({ message: 'Sunucu hatası: ' + error })
+    res.status(500).send({ message: 'Server error: ' + error })
   }
 })
 
@@ -153,26 +173,63 @@ app.post('/signup', async (req, res) => {
   }
 })
 
-app.post('/refresh', async (req, res) => {
-  const { refresh_token: refreshToken } = req.body
+// app.post('/refresh', async (req, res) => {
+//   const { refresh_token: refreshToken } = req.body
+
+//   if (!refreshToken) {
+//     return res.status(401).send({ message: 'Refresh token is required' })
+//   }
+
+//   try {
+//     const user = await knex('users').where('refresh_token', refreshToken).first()
+
+//     if (!user) {
+//       return res.status(403).send({ message: 'Invalid refresh token' })
+//     }
+
+//     try {
+//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+//       const decoded = await verifyToken(refreshToken, REFRESH_SECRET_KEY)
+
+//       const newAccessToken = generateAccessToken(user.username, user.id)
+//       await knex('users').where('username', user.username).update('access_token', newAccessToken)
+
+//       res.status(200).json({ accessToken: newAccessToken })
+//     } catch (err) {
+//       return res.status(403).send({ message: 'Invalid refresh token' })
+//     }
+//   } catch (error) {
+//     res.status(500).send({ message: 'Server error: ' + error })
+//   }
+// })
+
+app.post('/refresh-token', async (req, res) => {
+  const refreshToken = req.cookies.refresh_token
+  console.log(refreshToken)
 
   if (!refreshToken) {
-    return res.status(401).send({ message: 'Refresh token is required' })
+    return res.status(401).json({ message: 'Refresh token is required' })
   }
 
   try {
     const user = await knex('users').where('refresh_token', refreshToken).first()
 
     if (!user) {
-      return res.status(403).send({ message: 'Invalid refresh token' })
+      return res.status(403).json({ message: 'Invalid refresh token' })
     }
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const decoded = await verifyToken(refreshToken, REFRESH_SECRET_KEY)
 
-      const newAccessToken = generateAccessToken(user.username)
+      const newAccessToken = generateAccessToken(user.username, user.id)
       await knex('users').where('username', user.username).update('access_token', newAccessToken)
+
+      res.cookie('access_token', newAccessToken, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax'
+      })
 
       res.status(200).json({ accessToken: newAccessToken })
     } catch (err) {
@@ -183,51 +240,36 @@ app.post('/refresh', async (req, res) => {
   }
 })
 
-app.post('/refresh-token', async (req, res) => {
+app.post('/get-refresh-token', async (req, res) => {
   const { accessToken } = req.body
-
   if (!accessToken) {
     return res.status(401).json({ message: 'Access token is required' })
   }
-
-  let decoded
-  try {
-    decoded = jwt.decode(accessToken) // doğrudan jwt.decode kullanıyoruz
-    if (!decoded) {
-      throw new Error('Invalid access token')
-    }
-  } catch (error) {
-    return res.status(400).json({ message: 'Invalid access token' })
+  const user = await knex('users').where('access_token', accessToken).first()
+  if (!user) {
+    return res.status(403).json({ message: 'User not found' })
   }
 
-  const username = decoded.username
+  const refreshToken = user.refresh_token
 
+  if (!refreshToken) {
+    return res.status(403).json({ message: 'Refresh token not found' })
+  }
+  return res.status(200).json({ refreshToken: refreshToken })
+})
+
+app.post('/verify-token', async (req, res) => {
+  const accessToken = req.cookies.access_token
+  console.log(accessToken)
+  if (!accessToken) {
+    return res.status(401).json({ message: 'Access token is required' })
+  }
   try {
-    const user = await knex('users').where('username', username).first()
-
-    if (!user) {
-      return res.status(403).json({ message: 'User not found' })
-    }
-
-    const refreshToken = user.refresh_token
-
-    if (!refreshToken) {
-      return res.status(403).json({ message: 'Invalid refresh token' })
-    }
-
-    try {
-      jwt.verify(refreshToken, REFRESH_SECRET_KEY) // doğrudan jwt.verify kullanıyoruz
-    } catch (err) {
-      return res.status(403).json({ message: 'Invalid refresh token' })
-    }
-
-    const newAccessToken = generateAccessToken(username)
-    await knex('users').where('username', username).update('access_token', newAccessToken)
-
-    return res.status(200).json({ accessToken: newAccessToken })
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const decoded = jwt.verify(accessToken, ACCESS_SECRET_KEY)
+    return res.status(200).json({ message: 'Token is valid' })
   } catch (error) {
-    console.error('Server error:', error)
-    return res.status(500).json({ message: 'Server error' })
+    return res.status(403).json({ message: 'Invalid access token' })
   }
 })
 
