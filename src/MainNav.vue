@@ -2,7 +2,7 @@
   <body :color-scheme="isDark ? 'dark' : 'light'">
     <div class="nav-div">
       <nav class="nav">
-        <router-link class="logo-anchor" to="/home">
+        <router-link class="logo-anchor" to="/">
           <img src="/public/favicon.ico" alt="" />
         </router-link>
         <input type="checkbox" id="darkmode-toggle" @click="toggleDark()" />

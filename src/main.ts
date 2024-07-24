@@ -35,13 +35,14 @@ app1.use(pinia)
 export const mainAuthStore = useAuthStore()
 
 router.beforeEach(async (to, from, next) => {
+  const accessToken = await api.fetchAccessToken() //get the accessToken from cookie if you can
+  console.log(accessToken)
+  if ((to.path === '/' || to.path === '/login' || to.path === '/signup') && accessToken) {
+    console.log('?')
+    return next('/home')
+  }
+
   if (to.matched.some((record) => record.meta.requiresAuth)) {
-    const accessToken = mainAuthStore.access_token
-
-    if ((to.path === '/' || to.path === '/login' || to.path === '/signup') && accessToken) {
-      return next('/')
-    }
-
     try {
       const verifyResponse = await api.verifyAccessToken()
 

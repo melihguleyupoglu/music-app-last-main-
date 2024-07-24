@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { jwtDecode } from 'jwt-decode'
+// import { jwtDecode } from 'jwt-decode'
 import { mainAuthStore } from '../main'
 axios.defaults.withCredentials = true
 
@@ -28,6 +28,15 @@ async function refreshAccessToken() {
   }
 }
 
+async function fetchAccessToken() {
+  try {
+    const response = await axios.get('http://localhost:3000/get-access-token')
+    return response.data.accessToken
+  } catch (error) {
+    console.error('Error fetching the access token: ', error)
+  }
+}
+
 // async function getRefreshToken() {
 //   try {
 //     // const accessToken = getAccessToken()
@@ -44,14 +53,14 @@ async function refreshAccessToken() {
 //   }
 // }
 
-function isTokenExpired(token) {
-  if (!token) return true
+// function isTokenExpired(token) {
+//   if (!token) return true
 
-  const decoded = jwtDecode(token)
-  const currentTimeInSeconds = Date.now() / 1000
+//   const decoded = jwtDecode(token)
+//   const currentTimeInSeconds = Date.now() / 1000
 
-  return decoded.exp < currentTimeInSeconds
-}
+//   return decoded.exp < currentTimeInSeconds
+// }
 
 // eslint-disable-next-line no-unused-vars
 async function verifyAccessToken() {
@@ -68,14 +77,14 @@ async function verifyAccessToken() {
   }
 }
 
-function isRefreshTokenExpired(token) {
-  if (!token) return true
+// function isRefreshTokenExpired(token) {
+//   if (!token) return true
 
-  const decoded = jwtDecode(token)
-  const currentTimeInSeconds = Date.now() / 1000
+//   const decoded = jwtDecode(token)
+//   const currentTimeInSeconds = Date.now() / 1000
 
-  return decoded.exp < currentTimeInSeconds
-}
+//   return decoded.exp < currentTimeInSeconds
+// }
 
 api.interceptors.request.use(
   async (config) => {
@@ -114,14 +123,16 @@ api.interceptors.response.use(
   }
 )
 
-api.isTokenExpired = isTokenExpired
+// api.isTokenExpired = isTokenExpired
 
-api.isRefreshTokenExpired = isRefreshTokenExpired
+// api.isRefreshTokenExpired = isRefreshTokenExpired
 
 api.refreshAccessToken = refreshAccessToken
 
 // api.getRefreshToken = getRefreshToken
 
 api.verifyAccessToken = verifyAccessToken
+
+api.fetchAccessToken = fetchAccessToken
 
 export default api

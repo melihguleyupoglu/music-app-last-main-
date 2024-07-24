@@ -6,8 +6,6 @@ const cookieParser = require('cookie-parser')
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken')
-// const crypto = require('crypto')
-// const nodeMailer = require('nodemailer')
 const bcrypt = require('bcrypt')
 const { promisify } = require('util')
 
@@ -173,36 +171,6 @@ app.post('/signup', async (req, res) => {
   }
 })
 
-// app.post('/refresh', async (req, res) => {
-//   const { refresh_token: refreshToken } = req.body
-
-//   if (!refreshToken) {
-//     return res.status(401).send({ message: 'Refresh token is required' })
-//   }
-
-//   try {
-//     const user = await knex('users').where('refresh_token', refreshToken).first()
-
-//     if (!user) {
-//       return res.status(403).send({ message: 'Invalid refresh token' })
-//     }
-
-//     try {
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//       const decoded = await verifyToken(refreshToken, REFRESH_SECRET_KEY)
-
-//       const newAccessToken = generateAccessToken(user.username, user.id)
-//       await knex('users').where('username', user.username).update('access_token', newAccessToken)
-
-//       res.status(200).json({ accessToken: newAccessToken })
-//     } catch (err) {
-//       return res.status(403).send({ message: 'Invalid refresh token' })
-//     }
-//   } catch (error) {
-//     res.status(500).send({ message: 'Server error: ' + error })
-//   }
-// })
-
 app.post('/refresh-token', async (req, res) => {
   const refreshToken = req.cookies.refresh_token
   console.log(refreshToken)
@@ -240,23 +208,23 @@ app.post('/refresh-token', async (req, res) => {
   }
 })
 
-app.post('/get-refresh-token', async (req, res) => {
-  const { accessToken } = req.body
-  if (!accessToken) {
-    return res.status(401).json({ message: 'Access token is required' })
-  }
-  const user = await knex('users').where('access_token', accessToken).first()
-  if (!user) {
-    return res.status(403).json({ message: 'User not found' })
-  }
+// app.post('/get-refresh-token', async (req, res) => {
+//   const { accessToken } = req.body
+//   if (!accessToken) {
+//     return res.status(401).json({ message: 'Access token is required' })
+//   }
+//   const user = await knex('users').where('access_token', accessToken).first()
+//   if (!user) {
+//     return res.status(403).json({ message: 'User not found' })
+//   }
 
-  const refreshToken = user.refresh_token
+//   const refreshToken = user.refresh_token
 
-  if (!refreshToken) {
-    return res.status(403).json({ message: 'Refresh token not found' })
-  }
-  return res.status(200).json({ refreshToken: refreshToken })
-})
+//   if (!refreshToken) {
+//     return res.status(403).json({ message: 'Refresh token not found' })
+//   }
+//   return res.status(200).json({ refreshToken: refreshToken })
+// })
 
 app.post('/verify-token', async (req, res) => {
   const accessToken = req.cookies.access_token
@@ -271,6 +239,15 @@ app.post('/verify-token', async (req, res) => {
   } catch (error) {
     return res.status(403).json({ message: 'Invalid access token' })
   }
+})
+
+app.get('/get-access-token', (req, res) => {
+  const accessToken = req.cookies.access_token
+
+  if (!accessToken) {
+    return res.status(401).json({ message: 'Access token not found' })
+  }
+  res.json({ accessToken })
 })
 
 app.listen(3000, () => console.log('Server is running on port 3000'))

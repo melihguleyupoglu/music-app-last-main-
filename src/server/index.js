@@ -59,8 +59,6 @@ var cookieParser = require('cookie-parser');
 var express = require('express');
 var cors = require('cors');
 var jwt = require('jsonwebtoken');
-// const crypto = require('crypto')
-// const nodeMailer = require('nodemailer')
 var bcrypt = require('bcrypt');
 var promisify = require('util').promisify;
 var verifyToken = promisify(jwt.verify);
@@ -267,29 +265,6 @@ app.post('/signup', function (req, res) { return __awaiter(void 0, void 0, void 
         return [2 /*return*/];
     });
 }); });
-// app.post('/refresh', async (req, res) => {
-//   const { refresh_token: refreshToken } = req.body
-//   if (!refreshToken) {
-//     return res.status(401).send({ message: 'Refresh token is required' })
-//   }
-//   try {
-//     const user = await knex('users').where('refresh_token', refreshToken).first()
-//     if (!user) {
-//       return res.status(403).send({ message: 'Invalid refresh token' })
-//     }
-//     try {
-//       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-//       const decoded = await verifyToken(refreshToken, REFRESH_SECRET_KEY)
-//       const newAccessToken = generateAccessToken(user.username, user.id)
-//       await knex('users').where('username', user.username).update('access_token', newAccessToken)
-//       res.status(200).json({ accessToken: newAccessToken })
-//     } catch (err) {
-//       return res.status(403).send({ message: 'Invalid refresh token' })
-//     }
-//   } catch (error) {
-//     res.status(500).send({ message: 'Server error: ' + error })
-//   }
-// })
 app.post('/refresh-token', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var refreshToken, user, decoded, newAccessToken, err_2, error_4;
     return __generator(this, function (_a) {
@@ -338,29 +313,21 @@ app.post('/refresh-token', function (req, res) { return __awaiter(void 0, void 0
         }
     });
 }); });
-app.post('/get-refresh-token', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var accessToken, user, refreshToken;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                accessToken = req.body.accessToken;
-                if (!accessToken) {
-                    return [2 /*return*/, res.status(401).json({ message: 'Access token is required' })];
-                }
-                return [4 /*yield*/, knex('users').where('access_token', accessToken).first()];
-            case 1:
-                user = _a.sent();
-                if (!user) {
-                    return [2 /*return*/, res.status(403).json({ message: 'User not found' })];
-                }
-                refreshToken = user.refresh_token;
-                if (!refreshToken) {
-                    return [2 /*return*/, res.status(403).json({ message: 'Refresh token not found' })];
-                }
-                return [2 /*return*/, res.status(200).json({ refreshToken: refreshToken })];
-        }
-    });
-}); });
+// app.post('/get-refresh-token', async (req, res) => {
+//   const { accessToken } = req.body
+//   if (!accessToken) {
+//     return res.status(401).json({ message: 'Access token is required' })
+//   }
+//   const user = await knex('users').where('access_token', accessToken).first()
+//   if (!user) {
+//     return res.status(403).json({ message: 'User not found' })
+//   }
+//   const refreshToken = user.refresh_token
+//   if (!refreshToken) {
+//     return res.status(403).json({ message: 'Refresh token not found' })
+//   }
+//   return res.status(200).json({ refreshToken: refreshToken })
+// })
 app.post('/verify-token', function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var accessToken, decoded;
     return __generator(this, function (_a) {
@@ -379,6 +346,13 @@ app.post('/verify-token', function (req, res) { return __awaiter(void 0, void 0,
         return [2 /*return*/];
     });
 }); });
+app.get('/get-access-token', function (req, res) {
+    var accessToken = req.cookies.access_token;
+    if (!accessToken) {
+        return res.status(401).json({ message: 'Access token not found' });
+    }
+    res.json({ accessToken: accessToken });
+});
 app.listen(3000, function () { return console.log('Server is running on port 3000'); });
 function createSchema() {
     return __awaiter(this, void 0, void 0, function () {
