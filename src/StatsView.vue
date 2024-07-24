@@ -5,10 +5,19 @@ interface Artist {
   name: string
 }
 
+interface Image {
+  url: string
+}
+
+interface Album {
+  images: Image[]
+}
+
 interface Track {
   id: string
   name: string
   artists: Artist[]
+  album: Album
 }
 
 const token = localStorage.getItem('spotify_access_token')
@@ -35,7 +44,7 @@ async function getTopTracks() {
     return []
   }
   try {
-    const data = await fetchWebApi('v1/me/top/tracks?time_range=long_term&limit=5', 'GET', {})
+    const data = await fetchWebApi('v1/me/top/tracks?time_range=short_term&limit=5', 'GET', {})
     return data.items as Track[]
   } catch (error) {
     console.error('Spotify API error:', error)
@@ -63,6 +72,11 @@ onMounted(async () => {
           {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
         </li>
       </ul>
+      <ul class="track__image__container">
+        <li v-for="track in topTracks" :key="track.id">
+          <img :src="track.album.images[0].url" class="track__image" alt="Track Image" />
+        </li>
+      </ul>
     </div>
   </div>
 </template>
@@ -72,5 +86,15 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
+}
+.track__image__container {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+.track__image {
+  max-height: 250px;
+  max-width: 250px;
 }
 </style>
