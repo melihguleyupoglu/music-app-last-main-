@@ -77,7 +77,6 @@ const getSelectedStats = async () => {
 //   topTracks.value = await getTopTracksOrArtists()
 // })
 </script>
-
 <template>
   <div>
     <div v-if="statsStateStore.isWaiting" class="selection__container">
@@ -103,17 +102,25 @@ const getSelectedStats = async () => {
     </div>
     <div class="stats__container">
       <div v-if="topTracks.length">
-        <h2>Top {{ selection === 'tracks' ? 'Tracks' : 'Artists' }}:</h2>
+        <h1>Top {{ selection === 'tracks' ? 'Tracks' : 'Artists' }}:</h1>
         <ul v-if="statsStateStore.isDisplayModeEnabled">
           <li v-for="track in topTracks" :key="track.id">
             {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
           </li>
         </ul>
-        <ul class="track__image__container" v-if="selection === 'tracks'">
+        <ul
+          class="track__image__container"
+          v-if="selection === 'tracks'"
+          style="list-style-type: none"
+        >
           <li v-for="(track, index) in topTracks" :key="track.id">
             <img
               :src="track.album.images[0].url"
-              :class="index % 2 === 0 ? 'even__image' : 'odd__image'"
+              :style="{
+                zIndex: topTracks.length - index,
+                transform: `translate(${index * 90}px, ${index * 0}px)`
+              }"
+              class="track__image"
               alt="Track Image"
             />
           </li>
@@ -133,68 +140,69 @@ h2 {
 }
 
 .stats__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
   margin-top: 2%;
+}
+
+.track__image {
+  max-width: 150px;
+  max-height: 150px;
+  position: absolute;
+  transition: transform 0.3s ease-in-out;
+}
+
+.track__image__container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative; /* Bağıl konumlandırma */
+  width: 100%;
+  max-width: 400px; /* Konteyner genişliği */
+  height: 300px; /* Konteyner yüksekliği */
+  right: 150%;
+}
+
+/* Responsive Tasarım */
+@media (max-width: 768px) {
+  .track__image__container {
+    height: 200px; /* Daha küçük ekranlar için yükseklik */
+  }
+
+  .track__image {
+    max-width: 100px;
+    max-height: 100px;
+  }
+}
+
+@media (max-width: 650px) {
+  .track__image__container {
+    height: 150px; /* Daha küçük ekranlar için yükseklik */
+  }
+
+  .track__image {
+    max-width: 75px;
+    max-height: 75px;
+  }
+}
+
+@media (max-width: 530px) {
+  .track__image__container {
+    height: 100px;
+  }
+
+  .track__image {
+    max-width: 50px;
+    max-height: 50px;
+  }
 }
 
 .selection__container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* Container içindeki elemanları ortalamak için */
-  margin-top: 5%;
-}
-
-.selection__first,
-.selection__second {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.button__container {
-  display: flex;
   justify-content: center;
-}
-
-.track__image__container {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-}
-
-.even__image {
-  grid-column: 1 / 3;
-  max-height: 250px;
-  max-width: 250px;
-}
-
-.odd__image {
-  grid-column: 2 / -1;
-  max-height: 250px;
-  max-width: 250px;
-  align-self: center;
-}
-
-.even__image,
-.odd__image {
-  grid-row: 1/2;
-}
-
-.track__image {
-  grid-column: 1 / 3;
-  max-height: 250px;
-  max-width: 250px;
-}
-
-.selection {
-  border-radius: 4px;
-}
-
-select {
-  margin-left: 1%;
-}
-
-.stats__container {
-  margin-left: 10%;
-  /* margin-top: -15%; */
+  align-items: center;
 }
 </style>
