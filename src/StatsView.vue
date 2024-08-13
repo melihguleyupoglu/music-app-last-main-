@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useStatsStateStore } from './store/statsState'
+import { gridAnimation } from './animations.js'
 
 interface Artist {
   name: string
@@ -22,11 +23,12 @@ interface Track {
 }
 
 const statsStateStore = useStatsStateStore()
-
 const token = localStorage.getItem('spotify_access_token')
 const topTracks = ref<Track[]>([])
 const selection = ref('tracks')
 const timeRange = ref('short_term')
+const isGrid = ref(true)
+const itemNumber = ref(15)
 
 async function fetchWebApi(endpoint: string, method: string, body: object) {
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
@@ -51,8 +53,8 @@ async function getTopTracksOrArtists() {
 
   const endpoint =
     selection.value === 'tracks'
-      ? `v1/me/top/tracks?time_range=${timeRange.value}&limit=5`
-      : `v1/me/top/artists?time_range=${timeRange.value}&limit=5`
+      ? `v1/me/top/tracks?time_range=${timeRange.value}&limit=${itemNumber.value}`
+      : `v1/me/top/artists?time_range=${timeRange.value}&limit=${itemNumber.value}`
 
   try {
     const data = await fetchWebApi(endpoint, 'GET', {})
@@ -66,17 +68,35 @@ async function getTopTracksOrArtists() {
 const getSelectedStats = async () => {
   statsStateStore.setStatus({ isWaiting: false, isLoading: true })
   topTracks.value = await getTopTracksOrArtists()
-  if (topTracks.value) {
+  if (topTracks.value.length > 0) {
     statsStateStore.setStatus({ isLoading: false, isReady: true })
   }
 }
 
-// onMounted(() => {})
+const handleButtonClick = async () => {
+  await getSelectedStats()
+}
 
-// watch([selection, timeRange], async () => {
-//   topTracks.value = await getTopTracksOrArtists()
+const toggleView = () => {
+  isGrid.value = !isGrid.value
+  if (isGrid.value === false) {
+    // flexAnimation('.track__image__container')
+  }
+}
+
+const handleImageLoad = (event: Event) => {
+  const imgElement = event.target as HTMLImageElement
+  imgElement.parentElement?.classList.add('loaded')
+  gridAnimation('.track__image__container', 3, 5)
+}
+
+onMounted(() => {})
+
+// watch(topTracks, () => {
+//   handleButtonClick()
 // })
 </script>
+
 <template>
   <div>
     <div v-if="statsStateStore.isWaiting" class="selection__container">
@@ -95,34 +115,38 @@ const getSelectedStats = async () => {
           <option value="medium_term">Last 6 Months</option>
           <option value="long_term">Last Year</option>
         </select>
+        <div class="selection__third">
+          <label for="itemNumber">Choose the number item</label>
+          <select class="selection" id="itemNumber" v-model="itemNumber">
+            <option value="15">15</option>
+            <option value="25">25</option>
+          </select>
+        </div>
       </div>
       <div class="button__container">
-        <button @click="getSelectedStats" class="submit__button">Get my stats</button>
+        <button @click="handleButtonClick" class="submit__button">Get my stats</button>
       </div>
     </div>
     <div class="stats__container">
       <div v-if="topTracks.length">
-        <h1>Top {{ selection === 'tracks' ? 'Tracks' : 'Artists' }}:</h1>
-        <ul v-if="statsStateStore.isDisplayModeEnabled">
-          <li v-for="track in topTracks" :key="track.id">
-            {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
-          </li>
-        </ul>
+        <button @click="toggleView" class="toggle__button">Toggle View</button>
         <ul
           class="track__image__container"
+          :class="{ grid: isGrid, list: !isGrid }"
           v-if="selection === 'tracks'"
           style="list-style-type: none"
         >
-          <li v-for="(track, index) in topTracks" :key="track.id">
+          <li v-for="(track, index) in topTracks" :key="track.id" class="track__item">
+            <h2 class="track__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
             <img
               :src="track.album.images[0].url"
-              :style="{
-                zIndex: topTracks.length - index,
-                transform: `translate(${index * 90}px, ${index * 0}px)`
-              }"
               class="track__image"
+              :id="'track-' + index"
               alt="Track Image"
+              @load="handleImageLoad($event)"
             />
+            <div class="track__image-overlay"></div>
+            <p>{{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}</p>
           </li>
         </ul>
       </div>
@@ -130,7 +154,7 @@ const getSelectedStats = async () => {
   </div>
 </template>
 
-<style>
+<style scoped>
 h1 {
   margin-bottom: 2%;
 }
@@ -140,69 +164,89 @@ h2 {
 }
 
 .stats__container {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  margin-top: 2%;
-}
-
-.track__image {
-  max-width: 150px;
-  max-height: 150px;
-  position: absolute;
-  transition: transform 0.3s ease-in-out;
-}
-
-.track__image__container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative; /* Bağıl konumlandırma */
-  width: 100%;
-  max-width: 400px; /* Konteyner genişliği */
-  height: 300px; /* Konteyner yüksekliği */
-  right: 150%;
-}
-
-/* Responsive Tasarım */
-@media (max-width: 768px) {
-  .track__image__container {
-    height: 200px; /* Daha küçük ekranlar için yükseklik */
-  }
-
-  .track__image {
-    max-width: 100px;
-    max-height: 100px;
-  }
-}
-
-@media (max-width: 650px) {
-  .track__image__container {
-    height: 150px; /* Daha küçük ekranlar için yükseklik */
-  }
-
-  .track__image {
-    max-width: 75px;
-    max-height: 75px;
-  }
-}
-
-@media (max-width: 530px) {
-  .track__image__container {
-    height: 100px;
-  }
-
-  .track__image {
-    max-width: 50px;
-    max-height: 50px;
-  }
-}
-
-.selection__container {
+  margin-top: 5%;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.selection__container {
+  margin-top: 10%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.track__image__container {
+  transition: all 0.5s ease-in-out;
+}
+
+.track__image__container.grid {
+  display: grid;
+  column-gap: 120px;
+  row-gap: 50px;
+  grid-template-columns: repeat(5, 150px);
+}
+
+.track__image__container.list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 30px;
+  .track__item {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+  }
+}
+
+.track__item {
+  position: relative;
+  transition: transform 0.5s ease-in-out;
+}
+
+.track__image {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+  position: relative;
+}
+
+.track__image-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 150px;
+  height: 150px;
+  background-color: rgba(0, 0, 0, 1);
+  opacity: 1;
+  transition: opacity 1s ease-in-out;
+  z-index: 1;
+}
+
+.track__item.loaded .track__image {
+  opacity: 1;
+}
+
+.track__item.loaded .track__image-overlay {
+  opacity: 0;
+}
+
+.track__item:hover {
+  scale: 1.1;
+}
+
+.toggle__button {
+  margin-bottom: 20px;
+}
+
+.track__ranking {
+  font-weight: bold;
 }
 </style>

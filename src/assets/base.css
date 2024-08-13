@@ -23,8 +23,8 @@
 
 /* color palette from https://colorhunt.co/palette/e4c59eaf8260803d3b322c2b */
 :root {
-  --light-color: #af8260;
-  --dark-color: #322c2b;
+  --light-color: #f5f5f7;
+  --dark-color: #000000;
   --accent-color: #803d3b;
   --text-color: #fefaf6; /*this one is from another palette */
   --text-color-secondary: #e4c59e;
