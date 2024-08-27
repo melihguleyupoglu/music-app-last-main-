@@ -79,9 +79,6 @@ const handleButtonClick = async () => {
 
 const toggleView = () => {
   isGrid.value = !isGrid.value
-  if (isGrid.value === false) {
-    // flexAnimation('.track__image__container')
-  }
 }
 
 const handleImageLoad = (event: Event) => {
@@ -129,7 +126,25 @@ onMounted(() => {})
     </div>
     <div class="stats__container">
       <div v-if="topTracks.length">
-        <button @click="toggleView" class="toggle__button">Toggle View</button>
+        <!-- <button @click="toggleView" class="toggle__button"></button> -->
+        <div class="view__toggle">
+          <span
+            id="gridView"
+            :class="{ active: isGrid, clickable: !isGrid }"
+            :disabled="isGrid"
+            v-on:click="!isGrid && toggleView()"
+          >
+            Grid
+          </span>
+          <span
+            id="flexView"
+            :class="{ active: !isGrid, clickable: isGrid }"
+            :disabled="!isGrid"
+            v-on:click="isGrid && toggleView()"
+            >Flex</span
+          >
+        </div>
+
         <ul
           class="track__image__container"
           :class="{ grid: isGrid, list: !isGrid }"
@@ -146,7 +161,9 @@ onMounted(() => {})
               @load="handleImageLoad($event)"
             />
             <div class="track__image-overlay"></div>
-            <p>{{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}</p>
+            <p class="track__artist-text">
+              {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
+            </p>
           </li>
         </ul>
       </div>
@@ -155,6 +172,29 @@ onMounted(() => {})
 </template>
 
 <style scoped>
+.view__toggle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 4%;
+  font-size: xx-large;
+}
+
+.view__toggle .active {
+  font-weight: bold;
+  /* color: #000; */
+  /* cursor: not-allowed; */
+}
+
+.view-toggle span:not(.active) {
+  color: #007bff;
+}
+
+.view__toggle span {
+  /* cursor: pointer; */
+  padding: 5px 10px;
+}
+
 h1 {
   margin-bottom: 2%;
 }
@@ -248,5 +288,18 @@ h2 {
 
 .track__ranking {
   font-weight: bold;
+}
+
+.track__artist-text {
+  font-weight: bolder;
+}
+
+.toggle__button {
+  padding: 0 0 0 0;
+}
+
+.grid__image {
+  height: 30px;
+  width: 30px;
 }
 </style>
