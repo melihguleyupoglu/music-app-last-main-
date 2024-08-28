@@ -1,6 +1,6 @@
 import axios from 'axios'
 // import { jwtDecode } from 'jwt-decode'
-import { mainAuthStore } from '../main'
+// import { mainAuthStore } from '../main'
 axios.defaults.withCredentials = true
 
 const api = axios.create({
@@ -19,11 +19,11 @@ async function refreshAccessToken() {
         withCredentials: true
       }
     )
-    mainAuthStore.setAccessToken(response.data.accessToken)
+    // mainAuthStore.setAccessToken(response.data.accessToken)
     return response.data.accessToken
   } catch (error) {
     console.error('Error refreshing access token: ', error)
-    mainAuthStore.clearTokens()
+    // mainAuthStore.clearTokens()
     return null
   }
 }
@@ -88,13 +88,15 @@ async function verifyAccessToken() {
 
 api.interceptors.request.use(
   async (config) => {
-    if (mainAuthStore.access_token && api.isTokenExpired(mainAuthStore.access_token)) {
+    const accessToken = fetchAccessToken()
+
+    if (accessToken && api.isTokenExpired(accessToken)) {
       const newToken = await refreshAccessToken()
       if (newToken) {
         config.headers['Authorization'] = `Bearer ${newToken}`
       }
-    } else if (mainAuthStore.access_token) {
-      config.headers['Authorization'] = `Bearer ${mainAuthStore.access_token}`
+    } else if (accessToken) {
+      config.headers['Authorization'] = `Bearer ${accessToken}`
     }
 
     return config

@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
-import { useStatsStateStore } from './store/statsState'
+import { useLoadingStateStore } from './store/loadingStateStore'
 import { gridAnimation } from './animations.js'
 
 interface Artist {
@@ -22,7 +22,7 @@ interface Track {
   album: Album
 }
 
-const statsStateStore = useStatsStateStore()
+const statsStateStore = useLoadingStateStore()
 const token = localStorage.getItem('spotify_access_token')
 const topTracks = ref<Track[]>([])
 const selection = ref('tracks')
@@ -177,6 +177,7 @@ onMounted(() => {})
   justify-content: center;
   align-items: center;
   margin-bottom: 4%;
+  /* margin-top: 0%; */
   font-size: xx-large;
 }
 

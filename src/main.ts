@@ -10,7 +10,7 @@ import CallbackSpotify from './CallbackSpotify.vue'
 import PlayerView from './StatsView.vue'
 import api from './services/api'
 import { createPinia } from 'pinia'
-import { useAuthStore } from './store/auth'
+// import { useAuthStore } from './store/auth'
 
 const routes = [
   { path: '/', component: AccountView },
@@ -32,10 +32,10 @@ const app1 = createApp(App)
 app1.use(router)
 app1.use(pinia)
 
-export const mainAuthStore = useAuthStore()
+// export const mainAuthStore = useAuthStore()
 
 router.beforeEach(async (to, from, next) => {
-  const accessToken = await api.fetchAccessToken() //get the accessToken from cookie if you can
+  const accessToken = await api.fetchAccessToken() //get the accessToken from cookie
   console.log(accessToken)
   if ((to.path === '/' || to.path === '/login' || to.path === '/signup') && accessToken) {
     return next('/home')
@@ -50,7 +50,7 @@ router.beforeEach(async (to, from, next) => {
       } else {
         const newAccessToken = await api.refreshAccessToken()
         if (newAccessToken) {
-          mainAuthStore.setAccessToken(newAccessToken)
+          // mainAuthStore.setAccessToken(newAccessToken)
           next()
         } else {
           next('/login')

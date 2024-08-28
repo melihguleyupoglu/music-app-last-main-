@@ -1,11 +1,11 @@
 <template>
-  <body :color-scheme="isDark ? 'dark' : 'light'">
+  <body :color-scheme="uiStore.isDarkMode ? 'dark' : 'light'">
     <div class="nav-div">
       <nav class="nav">
         <router-link class="logo-anchor" to="/">
           <img src="/public/favicon.ico" alt="" />
         </router-link>
-        <input type="checkbox" id="darkmode-toggle" @click="toggleDark()" />
+        <input type="checkbox" id="darkmode-toggle" @click="uiStore.toggleDarkMode()" />
         <label for="darkmode-toggle" class="dark-label">
           <div class="indicator"></div>
         </label>
@@ -17,8 +17,10 @@
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core'
 import { onMounted, onUnmounted, ref } from 'vue'
+import { useUiStore } from './store/uiStore'
 
 const navbar = ref<HTMLElement | null>(null)
+const uiStore = useUiStore()
 
 const stickyNavbar = () => {
   if (navbar.value) {
@@ -31,17 +33,18 @@ const stickyNavbar = () => {
   }
 }
 
-const isDark = useDark({
-  selector: 'body',
-  attribute: 'color-scheme',
-  valueDark: 'dark',
-  valueLight: 'light'
-})
+// const isDark = useDark({
+//   selector: 'body',
+//   attribute: 'color-scheme',
+//   valueDark: 'dark',
+//   valueLight: 'light'
+// })
 
-const toggleDark = useToggle(isDark)
+// const toggleDark = useToggle(isDark)
 
 onMounted(() => {
   navbar.value = document.querySelector('.nav')
+  uiStore.applyDarkMode()
   window.addEventListener('scroll', stickyNavbar)
 })
 

@@ -20,6 +20,12 @@ nav {
 }
 body {
   color: var(--text-color);
+  background-color: #ffffff;
+}
+
+body.dark-mode {
+  background-color: #000000;
+  color: #ffffff;
 }
 
 [color-scheme='dark'] {
