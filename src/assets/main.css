@@ -19,7 +19,7 @@ nav {
   margin-right: 20%;
 }
 body {
-  color: var(--text-color);
+  color: var(--dark-color);
   background-color: #ffffff;
 }
 
@@ -30,18 +30,31 @@ body.dark-mode {
 
 [color-scheme='dark'] {
   background-color: var(--dark-color);
+  border-bottom-color: black;
+  color: black;
   .dark-label {
     border-color: black;
     background-color: #231f1e;
   }
+
+  .nav {
+    background-color: var(--dark-color);
+    transition: background-color 0.5s ease;
+  }
 }
 [color-scheme='light'] {
   background-color: var(--light-color);
+  border-bottom-color: white;
   .dark-label {
     border-color: white;
     background-color: #b0b0b0;
   }
   .indicator {
     border-color: white;
+  }
+
+  .nav {
+    background-color: var(--light-color);
+    transition: background-color 0.5s ease;
   }
 }

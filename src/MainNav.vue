@@ -3,7 +3,7 @@
     <div class="nav-div">
       <nav class="nav">
         <router-link class="logo-anchor" to="/">
-          <img src="/public/favicon.ico" alt="" />
+          <img class="logo__image" src="/public/cd.png" alt="" />
         </router-link>
         <input type="checkbox" id="darkmode-toggle" @click="uiStore.toggleDarkMode()" />
         <label for="darkmode-toggle" class="dark-label">
@@ -16,11 +16,27 @@
 
 <script setup lang="ts">
 import { useDark, useToggle } from '@vueuse/core'
-import { onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import { useUiStore } from './store/uiStore'
+import { watch } from 'vue'
+import { uiStore } from './main'
 
 const navbar = ref<HTMLElement | null>(null)
-const uiStore = useUiStore()
+// const uiStore = useUiStore()
+
+// const isDarkMode = computed(() => uiStore.isDarkMode)
+
+// watch(isDarkMode, (isDarkModeNew) => {
+//   if (!isDarkModeNew) {
+//     navbar.value?.classList.remove('dark')
+//     navbar.value?.classList.add('light')
+//     console.log('light')
+//   } else {
+//     navbar.value?.classList.remove('light')
+//     navbar.value?.classList.add('dark')
+//     console.log('dark')
+//   }
+// })
 
 const stickyNavbar = () => {
   if (navbar.value) {
@@ -32,15 +48,6 @@ const stickyNavbar = () => {
     }
   }
 }
-
-// const isDark = useDark({
-//   selector: 'body',
-//   attribute: 'color-scheme',
-//   valueDark: 'dark',
-//   valueLight: 'light'
-// })
-
-// const toggleDark = useToggle(isDark)
 
 onMounted(() => {
   navbar.value = document.querySelector('.nav')
@@ -54,6 +61,11 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
+.logo__image {
+  height: 40px;
+  width: 40px;
+}
+
 #darkmode-toggle {
   width: 0px;
   height: 0px;
@@ -91,8 +103,7 @@ onUnmounted(() => {
   width: 100%;
   top: 0;
   z-index: 1000;
-  background-color: #000000;
-  border-bottom: 2px solid black;
+  /* border-bottom: 2px solid black; */
 }
 
 @keyframes moveRight {

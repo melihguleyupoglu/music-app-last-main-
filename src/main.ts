@@ -1,5 +1,5 @@
 import './assets/main.css'
-import { createApp } from 'vue'
+import { createApp, ref } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import AccountView from './AccountView.vue'
@@ -10,6 +10,9 @@ import CallbackSpotify from './CallbackSpotify.vue'
 import PlayerView from './StatsView.vue'
 import api from './services/api'
 import { createPinia } from 'pinia'
+import { useUiStore } from './store/uiStore'
+import { watch } from 'vue'
+import { computed } from 'vue'
 // import { useAuthStore } from './store/auth'
 
 const routes = [
@@ -26,13 +29,32 @@ const router = createRouter({
 })
 
 const pinia = createPinia()
-
 const app1 = createApp(App)
 
 app1.use(router)
 app1.use(pinia)
 
-// export const mainAuthStore = useAuthStore()
+export const uiStore = useUiStore()
+const isDarkMode = computed(() => uiStore.isDarkMode)
+
+const navbar = ref<HTMLElement | null>(null)
+const bodyElement = document.body
+
+watch(isDarkMode, (isDarkModeNew) => {
+  if (!isDarkModeNew) {
+    navbar.value?.classList.remove('dark')
+    bodyElement.classList.remove('dark-mode')
+    navbar.value?.classList.add('light')
+    bodyElement.classList.add('light')
+    console.log('working on if block')
+  } else {
+    navbar.value?.classList.remove('light')
+    bodyElement.classList.remove('light')
+    navbar.value?.classList.add('dark')
+    bodyElement.classList.add('dark-mode')
+    console.log('working on else block')
+  }
+})
 
 router.beforeEach(async (to, from, next) => {
   const accessToken = await api.fetchAccessToken() //get the accessToken from cookie
