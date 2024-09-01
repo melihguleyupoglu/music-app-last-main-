@@ -1,6 +1,7 @@
 require('dotenv').config()
 import { Model } from 'objection'
 import Knex from 'knex'
+import { strict } from 'assert'
 const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const express = require('express')
@@ -248,6 +249,30 @@ app.get('/get-access-token', (req, res) => {
     return res.status(401).json({ message: 'Access token not found' })
   }
   res.json({ accessToken })
+})
+
+// app.get('/is-authenticated', (req, res) => {
+//   const accessToken = req.cookies['access_token']
+//   if (!accessToken) {
+//     return res.status(401).json({ error: 'Not authenticated' })
+//   } else {
+//     return res.status(200)
+//   }
+// })
+
+app.post('/logout', (req, res) => {
+  res.clearCookie('access_token', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax'
+  })
+  res.clearCookie('refresh_token', {
+    httpOnly: true,
+    secure: false,
+    sameSite: 'Lax'
+  })
+
+  res.status(200).json({ message: 'Logout successful' })
 })
 
 app.listen(3000, () => console.log('Server is running on port 3000'))

@@ -141,7 +141,7 @@ onMounted(() => {})
             :class="{ active: !isGrid, clickable: isGrid }"
             :disabled="!isGrid"
             v-on:click="isGrid && toggleView()"
-            >Flex</span
+            >List</span
           >
         </div>
 
@@ -205,7 +205,7 @@ h2 {
 }
 
 .stats__container {
-  margin-top: 5%;
+  margin-top: 2%;
   display: flex;
   flex-direction: column;
   justify-content: center;

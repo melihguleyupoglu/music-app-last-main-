@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-// import { mainAuthStore } from './main'
-// import api from './services/api'
+import { spotifyStore } from './main'
 
 const router = useRouter()
 
@@ -11,15 +10,8 @@ onMounted(async () => {
   const params = new URLSearchParams(hash)
   const accessToken = params.get('access_token')
 
-  // const mainAccessToken = localStorage.getItem('access_token')
-  // const refreshToken = await api.getRefreshToken()
-
   if (accessToken) {
-    localStorage.setItem('spotify_access_token', accessToken)
-
-    // mainAuthStore.setSpotifyAccessToken(accessToken)
-    // mainAuthStore.setAccessToken(mainAccessToken)
-    // mainAuthStore.setRefreshToken(refreshToken)
+    spotifyStore.saveSpotifyAccessToken(accessToken)
 
     console.log(accessToken)
     router.push({ path: '/stats' })

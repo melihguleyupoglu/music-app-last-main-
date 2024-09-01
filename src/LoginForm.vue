@@ -3,11 +3,7 @@ import axios from 'axios'
 import Swal from 'sweetalert2'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-// import { useAuthStore } from '@/store/auth.ts'
-// import api from '../src/services/api.js'
-// import { mainAuthStore } from './main'
 
-// const authStore = useAuthStore()
 const router = useRouter()
 
 const username = ref('')
@@ -26,15 +22,6 @@ const handleLogin = async (e) => {
     console.log(response.data)
     if (response.status === 200) {
       router.push('/home')
-
-      const accessToken = response.data.accessToken
-      const refreshToken = response.data.refreshToken
-
-      localStorage.setItem('access_token', accessToken)
-      localStorage.setItem('refresh_token', refreshToken)
-
-      // mainAuthStore.setAccessToken(accessToken)
-      // mainAuthStore.setRefreshToken(refreshToken)
     }
   } catch (err: any) {
     Swal.fire({
@@ -49,12 +36,33 @@ const handleLogin = async (e) => {
 
 <template>
   <div class="form__container">
-    <form action="" class="login-form" @submit="handleLogin($event)">
+    <form
+      action=""
+      class="login-form"
+      @submit="handleLogin($event)"
+      role="form"
+      aria-labelledby="loginFormTitle"
+    >
+      <h1 id="loginFormTitle" class="sr-only">Login Form</h1>
       <label for="username">Username:</label>
-      <input type="text" v-model="username" id="username" required />
+      <input
+        type="text"
+        v-model="username"
+        id="username"
+        required
+        aria-required="true"
+        aria-label="Enter your username"
+      />
       <label for="password">Password:</label>
-      <input type="password" v-model="password" id="password" required />
-      <button class="submit-button">Login</button>
+      <input
+        type="password"
+        v-model="password"
+        id="password"
+        required
+        aria-required="true"
+        aria-label="Enter your password"
+      />
+      <button type="submit" class="submit-button" aria-label="Login to your account">Login</button>
     </form>
   </div>
 </template>
@@ -82,5 +90,17 @@ input {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

@@ -13,7 +13,7 @@ import { createPinia } from 'pinia'
 import { useUiStore } from './store/uiStore'
 import { watch } from 'vue'
 import { computed } from 'vue'
-// import { useAuthStore } from './store/auth'
+import { useSpotifyStore } from './store/spotifyStore'
 
 const routes = [
   { path: '/', component: AccountView },
@@ -23,6 +23,7 @@ const routes = [
   { path: '/callback', component: CallbackSpotify },
   { path: '/stats', component: PlayerView }
 ]
+
 const router = createRouter({
   history: createWebHistory(),
   routes
@@ -35,9 +36,11 @@ app1.use(router)
 app1.use(pinia)
 
 export const uiStore = useUiStore()
+export const spotifyStore = useSpotifyStore()
 const isDarkMode = computed(() => uiStore.isDarkMode)
 
 const navbar = ref<HTMLElement | null>(null)
+export const authenticated = ref<boolean>(false)
 const bodyElement = document.body
 
 watch(isDarkMode, (isDarkModeNew) => {
@@ -58,6 +61,9 @@ watch(isDarkMode, (isDarkModeNew) => {
 
 router.beforeEach(async (to, from, next) => {
   const accessToken = await api.fetchAccessToken() //get the accessToken from cookie
+  if (accessToken) {
+    authenticated.value = true
+  }
   console.log(accessToken)
   if ((to.path === '/' || to.path === '/login' || to.path === '/signup') && accessToken) {
     return next('/home')

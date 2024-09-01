@@ -142,16 +142,56 @@ const handleSignup = async () => {
       action=""
       class="signup-form"
       @submit="validateUserCredentials($event, email, username, password, passwordTwo)"
+      aria-labelledby="signup-form-heading"
     >
-      <label for="email">email</label>
-      <input type="text" v-model="email" id="email" required />
+      <h2 id="signup-form-heading" class="sr-only">Signup Form</h2>
+
+      <label for="email">Email:</label>
+      <input
+        type="text"
+        v-model="email"
+        id="email"
+        required
+        aria-required="true"
+        aria-label="Enter your username"
+      />
       <label for="username">Username:</label>
-      <input type="text" v-model="username" id="username" required />
+      <input
+        type="text"
+        v-model="username"
+        id="username"
+        required
+        aria-required="true"
+        aria-label="Enter your username"
+      />
       <label for="password">Password:</label>
-      <input type="password" v-model="password" id="password" required />
-      <label for="password">Confirm your password:</label>
-      <input type="password" v-model="passwordTwo" id="passwordTwo" required />
-      <button class="create-acc-button">Create your account</button>
+      <input
+        type="password"
+        v-model="password"
+        id="password"
+        required
+        aria-required="true"
+        aria-label="Enter your password"
+        aria-describedby="password-requirements"
+      />
+      <div id="password-requirements" class="sr-only">
+        Your password must be at least 8 characters long.
+      </div>
+
+      <label for="passwordTwo">Confirm your password:</label>
+      <input
+        type="password"
+        v-model="passwordTwo"
+        id="passwordTwo"
+        required
+        aria-required="true"
+        aria-label="Re-enter your password"
+        aria-describedby="password-match"
+      />
+      <div id="password-match" class="sr-only">Ensure the passwords match.</div>
+      <button type="submit" aria-label="Create your account." class="create-acc-button">
+        Create your account
+      </button>
     </form>
   </div>
 </template>
@@ -176,10 +216,23 @@ input {
 }
 
 .create-acc-button {
+  margin-top: 1%;
   height: 30px;
-  width: 5%;
+  width: 10%;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 </style>

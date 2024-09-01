@@ -353,6 +353,19 @@ app.get('/get-access-token', function (req, res) {
     }
     res.json({ accessToken: accessToken });
 });
+app.post('/logout', function (req, res) {
+    res.clearCookie('access_token', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax'
+    });
+    res.clearCookie('refresh_token', {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'Lax'
+    });
+    res.status(200).json({ message: 'Logout successful' });
+});
 app.listen(3000, function () { return console.log('Server is running on port 3000'); });
 function createSchema() {
     return __awaiter(this, void 0, void 0, function () {
