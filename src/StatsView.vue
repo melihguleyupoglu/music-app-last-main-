@@ -2,6 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useLoadingStateStore } from './store/loadingStateStore'
 import { gridAnimation } from './animations.js'
+import { spotifyStore } from './main'
 
 interface Artist {
   name: string
@@ -23,7 +24,7 @@ interface Track {
 }
 
 const statsStateStore = useLoadingStateStore()
-const token = localStorage.getItem('spotify_access_token')
+const token = spotifyStore.spotifyAccessToken
 const topTracks = ref<Track[]>([])
 const selection = ref('tracks')
 const timeRange = ref('short_term')
@@ -87,8 +88,20 @@ const handleImageLoad = (event: Event) => {
   gridAnimation('.track__image__container', 3, 5)
 }
 
-onMounted(() => {})
+const setSelection = (newSelection) => {
+  selection.value = newSelection
+  console.log(selection.value)
+}
 
+const setTimeRange = (newTimeRange) => {
+  timeRange.value = newTimeRange
+  console.log(timeRange.value)
+}
+
+const setItemNumber = (newNumber) => {
+  itemNumber.value = newNumber
+  console.log(itemNumber.value)
+}
 // watch(topTracks, () => {
 //   handleButtonClick()
 // })
@@ -97,31 +110,80 @@ onMounted(() => {})
 <template>
   <div>
     <div v-if="statsStateStore.isWaiting" class="selection__container">
-      <div class="selection__first">
-        <h1>Get your stats</h1>
-        <label for="selection">Choose type: </label>
-        <select class="selection" id="selection" v-model="selection">
-          <option value="tracks">Tracks</option>
-          <option value="artists">Artists</option>
-        </select>
+      <h1>Get your stats</h1>
+      <div class="selection selection__first">
+        <h2>Type:</h2>
+        <button
+          class="generic-button"
+          @click="setSelection('tracks')"
+          :class="{ active: selection === 'tracks' }"
+          :aria-pressed="selection === 'tracks' ? 'true' : 'false'"
+        >
+          Tracks
+        </button>
+        <button
+          class="generic-button"
+          @click="setSelection('artists')"
+          :class="{ active: selection === 'artists' }"
+          :aria-pressed="selection === 'artists' ? 'true' : 'false'"
+        >
+          Artists
+        </button>
       </div>
-      <div class="selection__second">
-        <label for="timeRange">Choose time range: </label>
-        <select class="selection" id="timeRange" v-model="timeRange">
-          <option value="short_term">Last Month</option>
-          <option value="medium_term">Last 6 Months</option>
-          <option value="long_term">Last Year</option>
-        </select>
-        <div class="selection__third">
-          <label for="itemNumber">Choose the number item</label>
-          <select class="selection" id="itemNumber" v-model="itemNumber">
-            <option value="15">15</option>
-            <option value="25">25</option>
-          </select>
-        </div>
+      <div class="selection selection__second">
+        <h2>Time Range:</h2>
+        <button
+          class="generic-button"
+          @click="setTimeRange('short_term')"
+          :class="{ active: timeRange === 'short_term' }"
+          :aria-pressed="timeRange === 'short_term' ? 'true' : 'false'"
+        >
+          Last Month
+        </button>
+        <button
+          class="generic-button"
+          @click="setTimeRange('medium_term')"
+          :class="{ active: timeRange === 'medium_term' }"
+          :aria-pressed="timeRange === 'medium_term' ? 'true' : 'false'"
+        >
+          Last 6 Months
+        </button>
+        <button
+          class="generic-button"
+          @click="setTimeRange('long_term')"
+          :class="{ active: timeRange === 'long_term' }"
+          :aria-pressed="timeRange === 'long_term' ? 'true' : 'false'"
+        >
+          Last 12 Months
+        </button>
+      </div>
+      <div class="selection selection__third">
+        <h2>Stat Number:</h2>
+        <button
+          class="generic-button"
+          @click="setItemNumber(15)"
+          :class="{ active: itemNumber === 15 }"
+          :aria-pressed="itemNumber === 15 ? 'true' : 'false'"
+        >
+          15
+        </button>
+        <button
+          class="generic-button"
+          @click="setItemNumber(25)"
+          :class="{ active: itemNumber === 25 }"
+          :aria-pressed="itemNumber === 25 ? 'true' : 'false'"
+        >
+          25
+        </button>
       </div>
       <div class="button__container">
-        <button @click="handleButtonClick" class="submit__button">Get my stats</button>
+        <button
+          @click="handleButtonClick"
+          class="generic-button submit__button"
+          aria-label="Get your stats"
+        >
+          Get my stats
+        </button>
       </div>
     </div>
     <div class="stats__container">
@@ -157,8 +219,8 @@ onMounted(() => {})
               :src="track.album.images[0].url"
               class="track__image"
               :id="'track-' + index"
-              alt="Track Image"
               @load="handleImageLoad($event)"
+              :alt="`Album cover for ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`"
             />
             <div class="track__image-overlay"></div>
             <p class="track__artist-text">
@@ -197,11 +259,11 @@ onMounted(() => {})
 }
 
 h1 {
-  margin-bottom: 2%;
+  font-size: 4rem;
 }
 
 h2 {
-  margin-bottom: 2%;
+  font-size: xx-large;
 }
 
 .stats__container {
@@ -217,8 +279,34 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  margin-left: 20%;
   gap: 10px;
+}
+
+.generic-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: xx-large;
+}
+
+.generic-button.active {
+  font-weight: bold;
+  outline: none;
+}
+
+.generic-button:hover {
+  outline: 2px solid white;
+}
+
+.selection {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
 }
 
 .track__image__container {

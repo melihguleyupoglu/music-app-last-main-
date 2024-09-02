@@ -43,6 +43,17 @@ const navbar = ref<HTMLElement | null>(null)
 export const authenticated = ref<boolean>(false)
 const bodyElement = document.body
 
+window.addEventListener('beforeunload', () => {
+  if (spotifyStore.spotifyAccessToken) {
+    localStorage.setItem('spotify_access_token', spotifyStore.spotifyAccessToken)
+  }
+})
+
+const token = localStorage.getItem('spotify_access_token')
+if (token) {
+  spotifyStore.saveSpotifyAccessToken(token)
+}
+
 watch(isDarkMode, (isDarkModeNew) => {
   if (!isDarkModeNew) {
     navbar.value?.classList.remove('dark')
