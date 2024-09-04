@@ -2,11 +2,11 @@
 
 nav {
   display: flex;
-  justify-content: left;
+  justify-content:space-between;
   margin-left: 50%;
-  align-items: center;
+  align-items:center;
   margin-top: 0px;
-  flex-direction: flex-start;
+  flex-direction:row;
   margin: 0 0 0 0;
   min-height: 5rem;
   max-height: 6rem;

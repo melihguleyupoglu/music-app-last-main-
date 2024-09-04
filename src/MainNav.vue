@@ -88,7 +88,7 @@ onUnmounted(() => {
   width: 0px;
   height: 0px;
   visibility: hidden;
-  margin-right: 50%;
+  /* margin-right: 50%; */
 }
 
 .dark-label {
@@ -96,7 +96,6 @@ onUnmounted(() => {
   width: 65px;
   border: 1px solid black;
   border-radius: 200px;
-  display: inline-block;
   cursor: pointer;
   transition: background-color 0.3s ease;
   box-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
@@ -151,5 +150,6 @@ onUnmounted(() => {
 }
 
 .logout__button {
+  margin-right: 3%;
 }
 </style>

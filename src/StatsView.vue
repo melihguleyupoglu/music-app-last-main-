@@ -5,7 +5,9 @@ import { gridAnimation } from './animations.js'
 import { spotifyStore } from './main'
 
 interface Artist {
+  id?: string
   name: string
+  images?: Image[]
 }
 
 interface Image {
@@ -26,6 +28,7 @@ interface Track {
 const statsStateStore = useLoadingStateStore()
 const token = spotifyStore.spotifyAccessToken
 const topTracks = ref<Track[]>([])
+const topArtists = ref<Artist[]>([])
 const selection = ref('tracks')
 const timeRange = ref('short_term')
 const isGrid = ref(true)
@@ -59,16 +62,57 @@ async function getTopTracksOrArtists() {
 
   try {
     const data = await fetchWebApi(endpoint, 'GET', {})
-    return data.items as Track[]
+    if (selection.value === 'tracks') {
+      return data.items as Track[]
+    } else {
+      return data.items as Artist[]
+    }
   } catch (error) {
     console.error('Spotify API error:', error)
     return []
   }
 }
 
+const getTopTracks = async () => {
+  if (!token) {
+    console.error('access token not found')
+    return []
+  }
+
+  const endpoint = `v1/me/top/tracks?time_range=${timeRange.value}&limit=${itemNumber.value}`
+
+  try {
+    const data = await fetchWebApi(endpoint, 'GET', {})
+    return data.items as Track[]
+  } catch (error) {
+    console.error('Spotify API error: ', error)
+    return []
+  }
+}
+
+const getTopArtists = async () => {
+  if (!token) {
+    console.error('access token not found')
+    return []
+  }
+  const endpoint = `v1/me/top/artists?time_range=${timeRange.value}&limit=${itemNumber.value}`
+
+  try {
+    const data = await fetchWebApi(endpoint, 'GET', {})
+    return data.items as Artist[]
+  } catch (error) {
+    console.error('Spotify API error: ', error)
+    return []
+  }
+}
+
 const getSelectedStats = async () => {
   statsStateStore.setStatus({ isWaiting: false, isLoading: true })
-  topTracks.value = await getTopTracksOrArtists()
+  if (selection.value === 'tracks') {
+    topTracks.value = await getTopTracks()
+  } else if (selection.value === 'artists') {
+    topArtists.value = await getTopArtists()
+  }
   if (topTracks.value.length > 0) {
     statsStateStore.setStatus({ isLoading: false, isReady: true })
   }
@@ -225,6 +269,26 @@ const setItemNumber = (newNumber) => {
             <div class="track__image-overlay"></div>
             <p class="track__artist-text">
               {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
+            </p>
+          </li>
+        </ul>
+        <ul
+          class="artist__image__container"
+          :class="{ grid: isGrid, list: !isGrid }"
+          v-if="selection === 'artists'"
+          style="list-style-type: none"
+        >
+          <li v-for="(artist, index) in topArtists" :key="artist.id" class="artist__item">
+            <h2 class="artist__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
+            <img
+              :src="artist.images[0].url"
+              class="artist__image"
+              :id="'track-' + index"
+              @load="handleImageLoad($event)"
+            />
+            <div class="track__image-overlay"></div>
+            <p class="artist__text">
+              {{ artist.name }}
             </p>
           </li>
         </ul>
@@ -390,5 +454,9 @@ h2 {
 .grid__image {
   height: 30px;
   width: 30px;
+}
+
+body.light .generic-button:hover {
+  outline: 2px solid black;
 }
 </style>
