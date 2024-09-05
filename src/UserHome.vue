@@ -9,14 +9,14 @@ import { spotifyStore } from './main'
   </div>
   <div class="button-container">
     <button
-      class="button sp-button"
+      class="button sp-button generic-button"
       @click="spotifyStore.authorizeSpotify()"
       aria-label="Link your spotify account"
     >
       Link your spotify account
     </button>
     <button
-      class="button sc-button"
+      class="button sc-button generic-button"
       @click="spotifyStore.logoutSpotify()"
       aria-label="Link your soundcloud account"
     >
@@ -35,15 +35,38 @@ import { spotifyStore } from './main'
 .button-container {
   margin-top: 5%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 10px;
+  gap: 100px;
 }
 
 .button {
-  height: 30px;
-  width: 200px;
+  height: 100px;
+  width: 300px;
   border-radius: 8px;
+}
+
+.generic-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  cursor: pointer;
+  font-weight: normal;
+  font-size: xx-large;
+}
+
+.generic-button.active {
+  font-weight: bold;
+  outline: none;
+}
+
+.generic-button:hover {
+  outline: 2px solid white;
+}
+
+body.light .generic-button:hover {
+  outline: 2px solid black;
 }
 </style>
