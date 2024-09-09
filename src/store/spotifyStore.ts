@@ -22,6 +22,7 @@ export const useSpotifyStore = defineStore('spotify', {
 
     logoutSpotify() {
       this.spotifyAccessToken = null
+      localStorage.removeItem('spotify_access_token')
     }
   }
 })

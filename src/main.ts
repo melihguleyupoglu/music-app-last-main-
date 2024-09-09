@@ -39,9 +39,8 @@ export const uiStore = useUiStore()
 export const spotifyStore = useSpotifyStore()
 const isDarkMode = computed(() => uiStore.isDarkMode)
 
-const navbar = ref<HTMLElement | null>(null)
 export const authenticated = ref<boolean>(false)
-const bodyElement = document.body
+const bodyClass = document.body.classList
 
 window.addEventListener('beforeunload', () => {
   if (spotifyStore.spotifyAccessToken) {
@@ -56,22 +55,21 @@ if (token) {
 
 watch(isDarkMode, (isDarkModeNew) => {
   if (!isDarkModeNew) {
-    navbar.value?.classList.remove('dark')
-    bodyElement.classList.remove('dark-mode')
-    navbar.value?.classList.add('light')
-    bodyElement.classList.add('light')
-    console.log('working on if block')
+    bodyClass.remove('light-mode')
+    bodyClass.add('light-mode')
   } else {
-    navbar.value?.classList.remove('light')
-    bodyElement.classList.remove('light')
-    navbar.value?.classList.add('dark')
-    bodyElement.classList.add('dark-mode')
-    console.log('working on else block')
+    bodyClass.remove('light-mode')
   }
 })
 
 router.beforeEach(async (to, from, next) => {
   const accessToken = await api.fetchAccessToken() //get the accessToken from cookie
+  const tempIsDark = localStorage.getItem('localIsDarkMode')
+  console.log(tempIsDark)
+  if (tempIsDark === 'false') {
+    bodyClass.add('light-mode')
+    uiStore.setDarkMode(false)
+  }
   if (accessToken) {
     authenticated.value = true
   }

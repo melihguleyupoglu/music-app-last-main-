@@ -1,7 +1,14 @@
 <script setup lang="ts">
 import { spotifyStore } from './main'
-// import { useSpotifyStore } from './store/spotifyStore'
-// const spotifyStore = useSpotifyStore()
+import { uiStore } from './main'
+const saveUiState = () => {
+  const tempUiState = uiStore.isDarkMode
+  if (tempUiState) {
+    localStorage.setItem('localIsDarkMode', 'true')
+  } else {
+    localStorage.setItem('localIsDarkMode', 'false')
+  }
+}
 </script>
 <template>
   <div>
@@ -10,7 +17,7 @@ import { spotifyStore } from './main'
   <div class="button-container">
     <button
       class="button sp-button generic-button"
-      @click="spotifyStore.authorizeSpotify()"
+      @click="spotifyStore.authorizeSpotify(), saveUiState()"
       aria-label="Link your spotify account"
     >
       Link your spotify account
@@ -20,7 +27,7 @@ import { spotifyStore } from './main'
       @click="spotifyStore.logoutSpotify()"
       aria-label="Link your soundcloud account"
     >
-      Link your soundcloud account
+      Unlink your spotify account
     </button>
   </div>
 </template>
