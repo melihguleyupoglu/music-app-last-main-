@@ -95,3 +95,8 @@ body.light-mode .nav {
 .generic-button:hover {
   outline: 2px solid white;
 }
+
+body.dark-mode .info-svg {
+  fill: white;
+  stroke: white;
+}
