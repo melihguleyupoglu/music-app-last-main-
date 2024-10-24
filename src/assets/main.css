@@ -27,7 +27,7 @@ body.dark-mode {
   color: #ffffff;
 }
 
-body.light-mode {
+body.dark-mode .generic-button:hover body.light-mode {
   background-color: white;
   color: #000000;
   transition: background-color 0.5s ease;
@@ -44,6 +44,17 @@ body.light-mode .nav {
   .indicator {
     border-color: white;
   }
+}
+
+body.light-mode #signup-button,
+body.light-mode #login-button {
+  color: black;
+}
+
+body.light-mode #signup-button:hover,
+body.light-mode #login-button:hover {
+  outline: 2px solid black;
+  border-radius: 0px;
 }
 
 [color-scheme='dark'] {
@@ -94,6 +105,7 @@ body.light-mode .nav {
 
 .generic-button:hover {
   outline: 2px solid white;
+  border-radius: 0px;
 }
 
 body.dark-mode .info-svg {
