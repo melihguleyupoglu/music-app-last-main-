@@ -403,6 +403,12 @@ h2 {
   transition: transform 0.5s ease-in-out;
 }
 
+.generic__item:hover {
+  .generic__image {
+    outline: 3px solid white;
+  }
+}
+
 .generic__image {
   width: 150px;
   height: 150px;
