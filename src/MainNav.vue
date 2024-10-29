@@ -84,6 +84,10 @@ onUnmounted(() => {
   width: 60px;
 }
 
+.logo__image:hover {
+  outline: 2px solid white;
+}
+
 #darkmode-toggle {
   width: 0px;
   height: 0px;
