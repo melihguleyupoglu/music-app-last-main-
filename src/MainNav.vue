@@ -12292,6 +12292,10 @@ onUnmounted(() => {
   position: relative;
 }
 
+.dark-label:hover {
+  outline: 2px solid white;
+}
+
 .indicator {
   height: 26px;
   width: 26px;
