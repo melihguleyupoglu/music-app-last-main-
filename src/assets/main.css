@@ -96,6 +96,8 @@ body.light-mode #login-button:hover {
   cursor: pointer;
   font-weight: normal;
   font-size: xx-large;
+  height: 7rem;
+  width: 20rem;
 }
 
 .generic-button.active {

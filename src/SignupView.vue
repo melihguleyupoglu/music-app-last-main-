@@ -189,7 +189,7 @@ const handleSignup = async () => {
         aria-describedby="password-match"
       />
       <div id="password-match" class="sr-only">Ensure the passwords match.</div>
-      <button type="submit" aria-label="Create your account." class="create-acc-button">
+      <button type="submit" aria-label="Create your account." class="generic-button submit-button">
         Create your account
       </button>
     </form>
@@ -200,6 +200,8 @@ const handleSignup = async () => {
 .form__container {
   margin-top: 10%;
 }
+
+
 
 .signup-form {
   display: flex;

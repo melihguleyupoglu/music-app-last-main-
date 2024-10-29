@@ -62,7 +62,7 @@ const handleLogin = async (e) => {
         aria-required="true"
         aria-label="Enter your password"
       />
-      <button type="submit" class="submit-button" aria-label="Login to your account">Login</button>
+      <button type="submit" class="generic-button " aria-label="Login to your account">Login</button>
     </form>
   </div>
 </template>
@@ -84,12 +84,10 @@ input {
   margin-bottom: 0.5%;
 }
 
-.submit-button {
-  height: 20px;
-  width: 5%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+button {
+  width: 9rem;
+  height: 5rem;
+  margin-top: 1%;
 }
 
 .sr-only {
