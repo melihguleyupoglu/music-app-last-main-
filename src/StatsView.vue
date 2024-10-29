@@ -337,7 +337,7 @@ h2 {
 }
 
 .selection__container {
-  margin-top: 10%;
+  margin-top: 5%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -354,6 +354,9 @@ h2 {
   cursor: pointer;
   font-weight: normal;
   font-size: xx-large;
+  height: 5rem;
+  width: 15rem;
+  margin-top: -1%;
 }
 
 .generic-button.active {

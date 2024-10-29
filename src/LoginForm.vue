@@ -44,7 +44,7 @@ const handleLogin = async (e) => {
       aria-labelledby="loginFormTitle"
     >
       <h1 id="loginFormTitle" class="sr-only">Login Form</h1>
-      <label for="username">Username:</label>
+      <label for="username" class="generic-label">Username:</label>
       <input
         type="text"
         v-model="username"
@@ -53,7 +53,7 @@ const handleLogin = async (e) => {
         aria-required="true"
         aria-label="Enter your username"
       />
-      <label for="password">Password:</label>
+      <label for="password" class="generic-label">Password:</label>
       <input
         type="password"
         v-model="password"
@@ -62,7 +62,7 @@ const handleLogin = async (e) => {
         aria-required="true"
         aria-label="Enter your password"
       />
-      <button type="submit" class="generic-button " aria-label="Login to your account">Login</button>
+      <button type="submit" class="generic-button" aria-label="Login to your account">Login</button>
     </form>
   </div>
 </template>
@@ -100,5 +100,9 @@ button {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.generic-label {
+  font-size: large;
 }
 </style>
