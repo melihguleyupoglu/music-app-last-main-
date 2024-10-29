@@ -146,7 +146,7 @@ const handleSignup = async () => {
     >
       <h2 id="signup-form-heading" class="sr-only">Signup Form</h2>
 
-      <label for="email">Email:</label>
+      <label for="email" class="generic-label">Email:</label>
       <input
         type="text"
         v-model="email"
@@ -155,7 +155,7 @@ const handleSignup = async () => {
         aria-required="true"
         aria-label="Enter your username"
       />
-      <label for="username">Username:</label>
+      <label for="username" class="generic-label">Username:</label>
       <input
         type="text"
         v-model="username"
@@ -164,7 +164,7 @@ const handleSignup = async () => {
         aria-required="true"
         aria-label="Enter your username"
       />
-      <label for="password">Password:</label>
+      <label for="password" class="generic-label">Password:</label>
       <input
         type="password"
         v-model="password"
@@ -178,7 +178,7 @@ const handleSignup = async () => {
         Your password must be at least 8 characters long.
       </div>
 
-      <label for="passwordTwo">Confirm your password:</label>
+      <label for="passwordTwo" class="generic-label">Confirm your password:</label>
       <input
         type="password"
         v-model="passwordTwo"
@@ -200,8 +200,6 @@ const handleSignup = async () => {
 .form__container {
   margin-top: 10%;
 }
-
-
 
 .signup-form {
   display: flex;
@@ -236,5 +234,9 @@ input {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
+}
+
+.generic-label {
+  font-size: large;
 }
 </style>
