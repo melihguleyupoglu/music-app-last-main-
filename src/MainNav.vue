@@ -24,7 +24,7 @@
         >
           <div class="indicator"></div>
         </label>
-        <button class="logout__button" @click="logout" v-if="authenticated">Logout</button>
+        <button class="generic-button" @click="logout" v-if="authenticated">Logout</button>
       </nav>
     </div>
   </body>
@@ -125,6 +125,16 @@ onUnmounted(() => {
   top: 0;
   z-index: 1000;
   /* border-bottom: 2px solid black; */
+}
+
+.generic-button {
+  height: 2rem;
+  width: 4rem;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: medium;
 }
 
 @keyframes moveRight {
