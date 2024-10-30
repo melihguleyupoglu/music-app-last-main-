@@ -2,29 +2,16 @@
   <body :color-scheme="uiStore.isDarkMode ? 'dark' : 'light'">
     <div class="nav-div">
       <nav class="nav" aria-label="Main Navigation">
-        <router-link class="logo-anchor" to="/">
-          <h1 class="logo-header">The Music App</h1>
-        </router-link>
-        <input
-          tabindex="0"
-          type="checkbox"
-          id="darkmode-toggle"
-          @click="uiStore.toggleDarkMode()"
-          aria-label="Toggle Dark Mode"
-          :aria-checked="uiStore.isDarkMode"
-          role="switch"
-        />
-        <label
-          for="darkmode-toggle"
-          class="dark-label"
-          aria-hidden="true"
-          tabindex="0"
-          @keydown.space.prevent="triggerToggle"
-          @keydown.enter.prevent="triggerToggle"
-        >
-          <div class="indicator"></div>
-        </label>
-        <button class="generic-button" @click="logout" v-if="authenticated">Logout</button>
+        <header class="main-header">
+          <router-link class="logo-anchor" to="/">
+            <h1 class="logo-header">
+              <span class="header-span">The</span>
+              <span class="header-span">Music</span>
+              <span class="header-span">App</span>
+            </h1>
+          </router-link>
+        </header>
+        <!-- <button class="generic-button" @click="logout" v-if="authenticated">Logout</button> -->
       </nav>
     </div>
   </body>
@@ -86,16 +73,26 @@ onUnmounted(() => {
   align-items: center;
 }
 
+.main-header {
+  width: 100%;
+}
+
+.logo-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0rem;
+  color: white;
+  font-size: xx-large;
+}
+
 .logo-anchor {
   text-decoration: none;
 }
 
-.logo-header {
-  color: white;
-}
-
-.logo-header:hover {
-  outline: 2px solid white;
+.header-span {
+  font-weight: 1000;
+  margin-top: -1%;
 }
 
 .logo-svg {
@@ -174,6 +171,15 @@ onUnmounted(() => {
 
 .logout__button {
   margin-right: 3%;
+}
+
+.button-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  gap: 0px;
 }
 
 @keyframes moveRight {

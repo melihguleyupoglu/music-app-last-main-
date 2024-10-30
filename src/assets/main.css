@@ -8,10 +8,11 @@ nav {
   margin-top: 0px;
   flex-direction: row;
   margin: 0 0 0 0;
-  min-height: 5rem;
-  max-height: 6rem;
+  min-height: 9rem;
+  max-height: 10rem;
   flex-wrap: nowrap;
   overflow: hidden;
+  opacity: 0;
 }
 .logo-anchor {
   margin-left: 20%;
@@ -19,7 +20,17 @@ nav {
 }
 body {
   color: var(--dark-color);
-  background-color: #ffffff;
+  background: radial-gradient(
+    circle at center top,
+    #000000 0%,
+    #1a1a1a 20%,
+    #333333 40%,
+    #4d4d4d 60%,
+    #666666 80%,
+    #ffffff 100%
+  );
+  width: 100vw;
+  height: 100vh;
 }
 
 body.dark-mode {
