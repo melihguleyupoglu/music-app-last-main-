@@ -46,6 +46,7 @@ const handleLogin = async (e) => {
       <h1 id="loginFormTitle" class="sr-only">Login Form</h1>
       <label for="username" class="generic-label">Username:</label>
       <input
+        class="generic-input"
         type="text"
         v-model="username"
         id="username"
@@ -55,6 +56,7 @@ const handleLogin = async (e) => {
       />
       <label for="password" class="generic-label">Password:</label>
       <input
+        class="generic-input"
         type="password"
         v-model="password"
         id="password"
@@ -104,5 +106,8 @@ button {
 
 .generic-label {
   font-size: large;
+}
+
+.generic-input {
 }
 </style>

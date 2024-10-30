@@ -148,6 +148,7 @@ const handleSignup = async () => {
 
       <label for="email" class="generic-label">Email:</label>
       <input
+        class="generic-input"
         type="text"
         v-model="email"
         id="email"
@@ -157,6 +158,7 @@ const handleSignup = async () => {
       />
       <label for="username" class="generic-label">Username:</label>
       <input
+        class="generic-input"
         type="text"
         v-model="username"
         id="username"
@@ -166,6 +168,7 @@ const handleSignup = async () => {
       />
       <label for="password" class="generic-label">Password:</label>
       <input
+        class="generic-input"
         type="password"
         v-model="password"
         id="password"
@@ -180,6 +183,7 @@ const handleSignup = async () => {
 
       <label for="passwordTwo" class="generic-label">Confirm your password:</label>
       <input
+        class="generic-input"
         type="password"
         v-model="passwordTwo"
         id="passwordTwo"

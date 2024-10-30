@@ -114,3 +114,7 @@ body.dark-mode .info-svg {
   fill: white;
   stroke: white;
 }
+
+.generic-input:hover {
+  outline: 2px solid white;
+}
