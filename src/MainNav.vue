@@ -2,29 +2,47 @@
   <body :color-scheme="uiStore.isDarkMode ? 'dark' : 'light'">
     <div class="nav-div">
       <nav class="nav" aria-label="Main Navigation">
-        <header class="main-header">
-          <router-link class="logo-anchor" to="/">
-            <h1 class="logo-header">
-              <span class="header-span">The</span>
-              <span class="header-span">Music</span>
-              <span class="header-span">App</span>
-            </h1>
-          </router-link>
-        </header>
-        <!-- <button class="generic-button" @click="logout" v-if="authenticated">Logout</button> -->
+        <router-link class="logo-anchor" to="/">
+          <h1 class="logo-header">The Music App</h1>
+        </router-link>
+        <input
+          tabindex="0"
+          type="checkbox"
+          id="darkmode-toggle"
+          @click="uiStore.toggleDarkMode()"
+          aria-label="Toggle Dark Mode"
+          :aria-checked="uiStore.isDarkMode"
+          role="switch"
+        />
+        <label
+          for="darkmode-toggle"
+          class="dark-label"
+          aria-hidden="true"
+          tabindex="0"
+          @keydown.space.prevent="triggerToggle"
+          @keydown.enter.prevent="triggerToggle"
+        >
+          <div class="indicator"></div>
+        </label>
+        <button class="generic-button" @click="logout" v-if="authenticated">Logout</button>
       </nav>
     </div>
   </body>
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref } from 'vue'
+import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
 import { uiStore } from './main'
 import { useRouter } from 'vue-router'
 import { authenticated } from './main'
 
+const isDarkMode = ref(uiStore.isDarkMode)
 const router = useRouter()
 const navbar = ref<HTMLElement | null>(null)
+
+watchEffect(() => {
+  isDarkMode.value = uiStore.isDarkMode
+})
 
 const stickyNavbar = () => {
   if (navbar.value) {
@@ -67,27 +85,24 @@ onUnmounted(() => {
 
 <style scoped>
 .nav {
+  padding-top: 1rem;
+  display: grid;
+  grid-template-columns: 75% 25%;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-anchor {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
-}
-
-.main-header {
-  width: 100%;
-}
-
-.logo-header {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0rem;
-  color: white;
-  font-size: xx-large;
 }
 
 .logo-anchor {
   text-decoration: none;
+  font-size: x-large;
+  width: 20rem;
 }
 
 .header-span {
@@ -95,14 +110,12 @@ onUnmounted(() => {
   margin-top: -1%;
 }
 
-.logo-svg {
-  height: 4rem;
-  width: 4rem;
-}
-
-.logo-svg:hover {
-  outline: 2px solid white;
-  border-radius: 2rem;
+.ops-subnav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
 }
 
 #darkmode-toggle {
@@ -198,5 +211,21 @@ onUnmounted(() => {
   to {
     transform: translateX(0);
   }
+}
+
+.dark-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+  border-color: white;
+  background-color: white;
+  border-radius: 100px;
+}
+
+.light-svg,
+.dark-svg {
+  size: 1rem;
 }
 </style>

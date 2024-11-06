@@ -8,11 +8,10 @@ nav {
   margin-top: 0px;
   flex-direction: row;
   margin: 0 0 0 0;
-  min-height: 9rem;
-  max-height: 10rem;
+  min-height: 5rem;
+  max-height: 6rem;
   flex-wrap: nowrap;
   overflow: hidden;
-  opacity: 0;
 }
 .logo-anchor {
   margin-left: 20%;
@@ -20,22 +19,16 @@ nav {
 }
 body {
   color: var(--dark-color);
-  background: radial-gradient(
-    circle at center top,
-    #000000 0%,
-    #1a1a1a 20%,
-    #333333 40%,
-    #4d4d4d 60%,
-    #666666 80%,
-    #ffffff 100%
-  );
-  width: 100vw;
-  height: 100vh;
+  background-color: #ffffff;
 }
 
 body.dark-mode {
   background-color: #000000;
   color: #ffffff;
+}
+
+body.light-mode {
+  background-color: white;
 }
 
 body.dark-mode .generic-button:hover body.light-mode {
@@ -46,7 +39,7 @@ body.dark-mode .generic-button:hover body.light-mode {
 
 body.light-mode .nav {
   background-color: white;
-  color: black;
+
   .dark-label {
     border-color: white;
     background-color: #b0b0b0;
@@ -54,6 +47,9 @@ body.light-mode .nav {
   transition: background-color 0.5s ease;
   .indicator {
     border-color: white;
+  }
+  .logo-header {
+    color: black;
   }
 }
 
