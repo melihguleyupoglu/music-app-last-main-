@@ -51,6 +51,23 @@ body.light-mode #login-button {
   color: black;
 }
 
+body.light-mode {
+  .user-button:hover,
+  .dark-button:hover,
+  .logout-button:hover {
+    outline: 2px solid black;
+  }
+  .generic-button:hover {
+    outline: 2px solid black;
+  }
+  .logo-anchor:hover {
+    outline: 2px solid black;
+  }
+  /* .generic__image:hover {
+    outline: 2px solid black;
+  } */
+}
+
 body.light-mode #signup-button:hover,
 body.light-mode #login-button:hover {
   outline: 2px solid black;
@@ -96,8 +113,8 @@ body.light-mode #login-button:hover {
   cursor: pointer;
   font-weight: normal;
   font-size: xx-large;
-  height: 7rem;
-  width: 20rem;
+  height: 6rem;
+  width: 15rem;
 }
 
 .generic-button.active {

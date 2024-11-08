@@ -6,6 +6,19 @@
           <h1 class="logo-header">The Music App</h1>
         </router-link>
         <div class="ops-subnav">
+          <button class="user-button" v-if="authenticated">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="fill: rgba(0, 0, 0, 1); transform:; msfilter:"
+            >
+              <path
+                d="M12 2a5 5 0 1 0 5 5 5 5 0 0 0-5-5zm0 8a3 3 0 1 1 3-3 3 3 0 0 1-3 3zm9 11v-1a7 7 0 0 0-7-7h-4a7 7 0 0 0-7 7v1h2v-1a5 5 0 0 1 5-5h4a5 5 0 0 1 5 5v1z"
+              ></path>
+            </svg>
+          </button>
           <button class="dark-button" v-on:click="uiStore.toggleDarkMode">
             <svg
               v-if="!isDarkMode"
@@ -34,12 +47,21 @@
               ></path>
             </svg>
           </button>
-          <!-- <button
-            class="light-button"
-            v-if="isDarkMode"
-            v-on:click="uiStore.toggleDarkMode"
-          ></button> -->
-          <button class="generic-button" @click="logout" v-if="authenticated">Logout</button>
+          <button class="logout-button" @click="logout" v-if="authenticated">
+            <svg
+              class=""
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              style="fill: rgba(0, 0, 0, 1)"
+            >
+              <path
+                d="M19.002 3h-14c-1.103 0-2 .897-2 2v4h2V5h14v14h-14v-4h-2v4c0 1.103.897 2 2 2h14c1.103 0 2-.897 2-2V5c0-1.103-.898-2-2-2z"
+              ></path>
+              <path d="m11 16 5-4-5-4v3.001H3v2h8z"></path>
+            </svg>
+          </button>
         </div>
       </nav>
     </div>
@@ -84,10 +106,6 @@ const logout = async () => {
   }
 }
 
-const triggerToggle = () => {
-  document.getElementById('darkmode-toggle')?.click()
-}
-
 onMounted(() => {
   navbar.value = document.querySelector('.nav')
   uiStore.applyDarkMode()
@@ -115,15 +133,15 @@ onUnmounted(() => {
   align-items: center;
   text-decoration: none;
   font-size: x-large;
-  width: 20rem;
+  width: 15rem;
+}
+
+.logo-anchor:hover {
+  outline: 2px solid white;
 }
 
 .logo-header {
   color: white;
-}
-
-.logo-header:hover {
-  outline: 2px solid white;
 }
 
 .ops-subnav {
@@ -220,15 +238,31 @@ onUnmounted(() => {
   }
 }
 
-.dark-button {
+.dark-button,
+.user-button {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 2rem;
   width: 2rem;
-  border-color: white;
   background-color: white;
-  border-radius: 100px;
+  border: none;
+}
+
+.dark-button:hover,
+.user-button:hover,
+.logout-button:hover {
+  outline: 2px solid white;
+}
+
+.logout-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 2rem;
+  width: 2rem;
+  border: none;
+  background-color: white;
 }
 
 .light-svg,
