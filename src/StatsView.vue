@@ -195,21 +195,20 @@ const setItemNumber = (newNumber: 15 | 25) => {
     <div class="stats__container">
       <div v-if="topTracks.length | topArtists.length">
         <div class="view__toggle">
-          <span
-            id="gridView"
+          <button
+            class="generic-button"
             :class="{ active: isGrid, clickable: !isGrid }"
-            :disabled="isGrid"
             v-on:click="!isGrid && toggleView()"
           >
             Grid
-          </span>
-          <span
-            id="flexView"
+          </button>
+          <button
+            class="generic-button"
             :class="{ active: !isGrid, clickable: isGrid }"
-            :disabled="!isGrid"
             v-on:click="isGrid && toggleView()"
-            >List</span
           >
+            List
+          </button>
         </div>
 
         <ul
