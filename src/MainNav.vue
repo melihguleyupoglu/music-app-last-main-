@@ -262,4 +262,20 @@ onUnmounted(() => {
 .dark-svg {
   size: 1rem;
 }
+
+@media screen and (max-width: 415px) {
+  .user-button,
+  .dark-button,
+  .logout-button {
+    height: 1.8rem;
+    width: 1.8rem;
+  }
+  .logo-anchor {
+    font-size: large;
+  }
+  .ops-subnav {
+    gap: 0.1rem;
+    margin-right: 1rem;
+  }
+}
 </style>
