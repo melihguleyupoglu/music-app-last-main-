@@ -268,6 +268,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
   justify-content: center;
   align-items: center;
   margin-bottom: 4%;
+  gap: 1rem;
   /* margin-top: 0%; */
   font-size: xx-large;
 }
