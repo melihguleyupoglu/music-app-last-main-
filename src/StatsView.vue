@@ -283,7 +283,6 @@ const setItemNumber = (newNumber: 15 | 25) => {
 }
 
 .view__toggle span {
-  /* cursor: pointer; */
   padding: 5px 10px;
 }
 
@@ -356,6 +355,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  margin-right: 25rem;
   gap: 30px;
   .generic__item {
     display: flex;
