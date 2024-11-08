@@ -69,39 +69,6 @@ const getTopStats = async () => {
   }
 }
 
-// const getTopTracks = async () => {
-//   if (!token) {
-//     console.error('access token not found')
-//     return []
-//   }
-
-//   const endpoint = `v1/me/top/tracks?time_range=${timeRange.value}&limit=${itemNumber.value}`
-
-//   try {
-//     const data = await fetchWebApi(endpoint, 'GET', {})
-//     return data.items as Track[]
-//   } catch (error) {
-//     console.error('Spotify API error: ', error)
-//     return []
-//   }
-// }
-
-// const getTopArtists = async () => {
-//   if (!token) {
-//     console.error('access token not found')
-//     return []
-//   }
-//   const endpoint = `v1/me/top/artists?time_range=${timeRange.value}&limit=${itemNumber.value}`
-
-//   try {
-//     const data = await fetchWebApi(endpoint, 'GET', {})
-//     return data.items as Artist[]
-//   } catch (error) {
-//     console.error('Spotify API error: ', error)
-//     return []
-//   }
-// }
-
 const getSelectedStats = async () => {
   loadingStateStore.setStatus({ isWaiting: false, isLoading: true })
   if (selection.value === 'tracks') {
