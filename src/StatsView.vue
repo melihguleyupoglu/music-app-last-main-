@@ -229,7 +229,8 @@ const setItemNumber = (newNumber: 15 | 25) => {
             />
             <div class="track__image-overlay generic__image__overlay"></div>
             <p class="track__artist-text generic-text">
-              {{ track.name }} by {{ track.artists.map((artist) => artist.name).join(', ') }}
+              {{ index + 1 }}. {{ track.name }} by
+              {{ track.artists.map((artist) => artist.name).join(', ') }}
             </p>
           </li>
         </ul>
