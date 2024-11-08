@@ -253,6 +253,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
             />
             <div class="artist__image-overlay generic__image__overlay"></div>
             <p class="artist__text generic-text">
+              {{ index + 1 }}.
               {{ artist.name }}
             </p>
           </li>
