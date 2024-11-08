@@ -1,9 +1,5 @@
 @import './base.css';
 
-.logo-anchor {
-  margin-left: 20%;
-  margin-right: 20%;
-}
 body {
   color: var(--dark-color);
   font-family: 'Oswald';

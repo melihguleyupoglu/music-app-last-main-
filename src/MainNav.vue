@@ -122,8 +122,6 @@ onUnmounted(() => {
   padding-top: 1rem;
   display: grid;
   grid-template-columns: 75% 25%;
-  align-items: center;
-  justify-content: center;
 }
 
 .logo-anchor {
@@ -134,6 +132,7 @@ onUnmounted(() => {
   text-decoration: none;
   font-size: x-large;
   width: 15rem;
+  margin-left: 5%;
 }
 
 .logo-anchor:hover {
@@ -272,6 +271,7 @@ onUnmounted(() => {
   }
   .logo-anchor {
     font-size: large;
+    margin-left: -5%;
   }
   .ops-subnav {
     gap: 0.1rem;

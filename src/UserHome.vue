@@ -11,12 +11,12 @@ const saveUiState = () => {
 }
 </script>
 <template>
-  <div>
-    <h2 class="welcome-message">Welcome, to get started please link your accounts.</h2>
+  <div class="welcome-message">
+    <p>Welcome, to get started please link your accounts.</p>
   </div>
   <div class="button-container">
     <button
-      class="button sp-button generic-button"
+      class="sp-button generic-button"
       @click="spotifyStore.authorizeSpotify(), saveUiState()"
       aria-label="Link your spotify account"
       v-if="!spotifyStore.isSpotifyAuthenticated"
@@ -24,7 +24,7 @@ const saveUiState = () => {
       Link your spotify account
     </button>
     <button
-      class="button generic-button"
+      class="generic-button"
       v-if="spotifyStore.isSpotifyAuthenticated"
       @click="spotifyStore.authorizeSpotify(), saveUiState()"
     >
@@ -53,9 +53,14 @@ const saveUiState = () => {
 <style>
 .welcome-message {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   justify-content: center;
   align-items: center;
   margin-top: 10%;
+  p {
+    font-size: x-large;
+  }
 }
 
 .button-container {
@@ -99,5 +104,13 @@ body.light .generic-button:hover {
 .info-text {
   margin-top: 5rem;
   margin-left: 5rem;
+}
+
+@media screen and (max-width: 415px) {
+  .welcome-message {
+    p {
+      font-size: medium;
+    }
+  }
 }
 </style>
