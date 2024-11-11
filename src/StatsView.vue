@@ -116,11 +116,10 @@ const setItemNumber = (newNumber: 15 | 25) => {
 <template>
   <div>
     <div v-if="loadingStateStore.isWaiting" class="selection__container">
-      <h1>Get your stats</h1>
       <div class="selection selection__first">
-        <h2>Type:</h2>
+        <h2 class="grid-first">Type:</h2>
         <button
-          class="generic-button"
+          class="generic-button selection__first-first-button grid-second"
           @click="setSelection('tracks')"
           :class="{ active: selection === 'tracks' }"
           :aria-pressed="selection === 'tracks' ? 'true' : 'false'"
@@ -128,7 +127,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Tracks
         </button>
         <button
-          class="generic-button"
+          class="generic-button selection__first-second-button grid-third"
           @click="setSelection('artists')"
           :class="{ active: selection === 'artists' }"
           :aria-pressed="selection === 'artists' ? 'true' : 'false'"
@@ -137,9 +136,9 @@ const setItemNumber = (newNumber: 15 | 25) => {
         </button>
       </div>
       <div class="selection selection__second">
-        <h2>Time Range:</h2>
+        <h2 class="grid-first">Time Range:</h2>
         <button
-          class="generic-button"
+          class="generic-button selection__second-first-button grid-second"
           @click="setTimeRange('short_term')"
           :class="{ active: timeRange === 'short_term' }"
           :aria-pressed="timeRange === 'short_term' ? 'true' : 'false'"
@@ -147,7 +146,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Last Month
         </button>
         <button
-          class="generic-button"
+          class="generic-button selection__second-second-button grid-third"
           @click="setTimeRange('medium_term')"
           :class="{ active: timeRange === 'medium_term' }"
           :aria-pressed="timeRange === 'medium_term' ? 'true' : 'false'"
@@ -155,7 +154,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Last 6 Months
         </button>
         <button
-          class="generic-button"
+          class="generic-button selection__second-third-button grid-fourth"
           @click="setTimeRange('long_term')"
           :class="{ active: timeRange === 'long_term' }"
           :aria-pressed="timeRange === 'long_term' ? 'true' : 'false'"
@@ -164,9 +163,9 @@ const setItemNumber = (newNumber: 15 | 25) => {
         </button>
       </div>
       <div class="selection selection__third">
-        <h2>Stat Number:</h2>
+        <h2 class="grid-first">Stat Number:</h2>
         <button
-          class="generic-button"
+          class="generic-button selection__third-first-button grid-second"
           @click="setItemNumber(15)"
           :class="{ active: itemNumber === 15 }"
           :aria-pressed="itemNumber === 15 ? 'true' : 'false'"
@@ -174,7 +173,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           15
         </button>
         <button
-          class="generic-button"
+          class="generic-button selection__third-second-button grid-third"
           @click="setItemNumber(25)"
           :class="{ active: itemNumber === 25 }"
           :aria-pressed="itemNumber === 25 ? 'true' : 'false'"
@@ -185,7 +184,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
       <div class="button__container">
         <button
           @click="handleButtonClick"
-          class="generic-button submit__button"
+          class="generic-button submit__button grid-second-third"
           aria-label="Get your stats"
         >
           Get my stats
@@ -306,15 +305,40 @@ h2 {
 
 .selection__container {
   margin-top: 5%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  margin-left: 20%;
-  gap: 10px;
 }
 
-.generic-button {
+.selection {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+}
+
+.grid-first {
+  grid-column: 1;
+  margin-left: 10%;
+}
+.grid-second {
+  grid-column: 2;
+}
+.grid-third {
+  grid-column: 3;
+}
+.grid-fourth {
+  grid-column: 4;
+}
+
+.grid-second-third {
+  grid-column: 2;
+}
+
+.button__container {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+
+.selection__ .generic-button {
   background: none;
   border: none;
   padding: 0;
@@ -336,11 +360,12 @@ h2 {
   outline: 2px solid white;
 }
 
-.selection {
+/* .selection {
   display: flex;
   flex-direction: row;
+  justify-content: flex-start;
   gap: 20px;
-}
+} */
 
 .generic__image__container {
   transition: all 0.5s ease-in-out;
