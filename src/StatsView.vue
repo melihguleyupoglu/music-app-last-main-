@@ -392,6 +392,10 @@ h2 {
   }
 }
 
+.artist__image__container.list {
+  margin-right: 45rem;
+}
+
 .generic__item {
   position: relative;
   transition: transform 0.5s ease-in-out;
