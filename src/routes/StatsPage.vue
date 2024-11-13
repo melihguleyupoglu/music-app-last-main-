@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useLoadingStateStore } from '../store/loadingStateStore'
-import { gridAnimation } from '../animations.js'
+import { gridAnimation } from '../utils/animations.js'
 import { spotifyStore } from '../main'
 
 interface Artist {
