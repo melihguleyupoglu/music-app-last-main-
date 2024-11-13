@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import MainNav from './MainNav.vue'
+import AppNavbar from './routes/AppNavbar.vue'
 import { RouterView } from 'vue-router'
 </script>
 
 <template>
-  <MainNav />
+  <AppNavbar />
   <RouterView />
 </template>
 

@@ -107,7 +107,4 @@ button {
 .generic-label {
   font-size: large;
 }
-
-.generic-input {
-}
 </style>

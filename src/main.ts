@@ -2,12 +2,12 @@ import './assets/main.css'
 import { createApp, ref } from 'vue'
 import App from './App.vue'
 import { createRouter, createWebHistory } from 'vue-router'
-import AccountView from './AccountView.vue'
-import SignupView from './SignupView.vue'
-import LoginForm from './LoginForm.vue'
-import UserHome from './UserHome.vue'
-import CallbackSpotify from './CallbackSpotify.vue'
-import PlayerView from './StatsView.vue'
+import AuthLanding from './routes/AuthLanding.vue'
+import SignupPage from './routes/SignupPage.vue'
+import LoginPage from './routes/LoginPage.vue'
+import SpotifyConnect from './routes/SpotifyConnect.vue'
+import SpotifyCallback from './routes/SpotifyCallback.vue'
+import PlayerView from './routes/StatsPage.vue'
 import api from './services/api'
 import { createPinia } from 'pinia'
 import { useUiStore } from './store/uiStore'
@@ -16,11 +16,11 @@ import { computed } from 'vue'
 import { useSpotifyStore } from './store/spotifyStore'
 
 const routes = [
-  { path: '/', component: AccountView },
-  { path: '/login', component: LoginForm },
-  { path: '/signup', component: SignupView },
-  { path: '/home', component: UserHome, meta: { requiresAuth: true } },
-  { path: '/callback', component: CallbackSpotify },
+  { path: '/', component: AuthLanding },
+  { path: '/login', component: LoginPage },
+  { path: '/signup', component: SignupPage },
+  { path: '/home', component: SpotifyConnect, meta: { requiresAuth: true } },
+  { path: '/callback', component: SpotifyCallback },
   { path: '/stats', component: PlayerView }
 ]
 

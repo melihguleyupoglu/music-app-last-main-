@@ -70,9 +70,9 @@
 
 <script setup lang="ts">
 import { onMounted, onUnmounted, ref, watchEffect } from 'vue'
-import { uiStore } from './main'
+import { uiStore } from '../main'
 import { useRouter } from 'vue-router'
-import { authenticated } from './main'
+import { authenticated } from '../main'
 
 const isDarkMode = ref(uiStore.isDarkMode)
 const router = useRouter()

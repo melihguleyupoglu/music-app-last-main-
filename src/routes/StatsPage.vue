@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useLoadingStateStore } from './store/loadingStateStore'
-import { gridAnimation } from './animations.js'
-import { spotifyStore } from './main'
+import { useLoadingStateStore } from '../store/loadingStateStore'
+import { gridAnimation } from '../animations.js'
+import { spotifyStore } from '../main'
 
 interface Artist {
   id: string
@@ -269,14 +269,11 @@ const setItemNumber = (newNumber: 15 | 25) => {
   align-items: center;
   margin-bottom: 4%;
   gap: 1rem;
-  /* margin-top: 0%; */
   font-size: xx-large;
 }
 
 .view__toggle .active {
   font-weight: bold;
-  /* color: #000; */
-  /* cursor: not-allowed; */
 }
 
 .view-toggle span:not(.active) {
@@ -359,13 +356,6 @@ h2 {
 .generic-button:hover {
   outline: 2px solid white;
 }
-
-/* .selection {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  gap: 20px;
-} */
 
 .generic__image__container {
   transition: all 0.5s ease-in-out;

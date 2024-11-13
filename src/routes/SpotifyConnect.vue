@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { spotifyStore } from './main'
-import { uiStore } from './main'
+import { spotifyStore } from '../main'
+import { uiStore } from '../main'
 const saveUiState = () => {
   const tempUiState = uiStore.isDarkMode
   if (tempUiState) {
