@@ -116,6 +116,7 @@ body.light-mode #login-button:hover {
   font-size: xx-large;
   height: 6rem;
   width: 15rem;
+  font-family: 'Oswald';
 }
 
 .generic-button.active {
@@ -126,6 +127,12 @@ body.light-mode #login-button:hover {
 .generic-button:hover {
   outline: 2px solid white;
   border-radius: 0px;
+}
+
+.generic-label {
+  font-size: large;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
 }
 
 body.dark-mode .info-svg {

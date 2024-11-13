@@ -1,14 +1,11 @@
 import axios from 'axios'
-// import { jwtDecode } from 'jwt-decode'
-// import { mainAuthStore } from '../main'
+
 axios.defaults.withCredentials = true
 
 const api = axios.create({
   baseURL: 'http://localhost:3000',
   withCredentials: true
 })
-
-// const getAccessToken = () => mainAuthStore.getAccessToken
 
 async function refreshAccessToken() {
   try {
@@ -19,11 +16,10 @@ async function refreshAccessToken() {
         withCredentials: true
       }
     )
-    // mainAuthStore.setAccessToken(response.data.accessToken)
+
     return response.data.accessToken
   } catch (error) {
     console.error('Error refreshing access token: ', error)
-    // mainAuthStore.clearTokens()
     return null
   }
 }

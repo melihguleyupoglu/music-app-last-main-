@@ -243,4 +243,16 @@ input {
 .generic-label {
   font-size: large;
 }
+
+input {
+  margin-bottom: 0.5%;
+}
+
+.submit-button {
+  margin-top: 1rem;
+  height: 4rem;
+  width: 6rem;
+  font-size: large;
+  font-weight: 400;
+}
 </style>
