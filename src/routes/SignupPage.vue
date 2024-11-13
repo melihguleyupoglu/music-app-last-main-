@@ -202,7 +202,7 @@ const handleSignup = async () => {
 
 <style scoped>
 .form__container {
-  margin-top: 10%;
+  margin-top: 5%;
 }
 
 .signup-form {
@@ -211,7 +211,6 @@ const handleSignup = async () => {
   row-gap: 100%;
   justify-content: center;
   align-items: center;
-  margin-top: 0.5%;
 }
 
 input {
@@ -254,5 +253,19 @@ input {
   width: 6rem;
   font-size: large;
   font-weight: 400;
+}
+
+@media screen and (max-height: 540) {
+  .form__container {
+    max-height: 10vh;
+    margin-top: auto;
+  }
+}
+
+@media screen and(max-height:410) {
+  .form__container {
+    max-height: 5vh;
+    margin-top: auto;
+  }
 }
 </style>
