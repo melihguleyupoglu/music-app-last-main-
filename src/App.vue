@@ -5,7 +5,9 @@ import { RouterView } from 'vue-router'
 
 <template>
   <AppNavbar />
-  <RouterView />
+  <main>
+    <RouterView />
+  </main>
 </template>
 
 <style></style>
