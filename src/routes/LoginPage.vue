@@ -9,9 +9,7 @@ const router = useRouter()
 const username = ref('')
 const password = ref('')
 
-console.log(username, password)
-
-const handleLogin = async (e) => {
+const handleLogin = async (e: Event) => {
   e.preventDefault()
   console.log(username, password)
   try {
@@ -105,6 +103,5 @@ input {
   height: 3rem;
   width: 5rem;
   font-weight: 400;
-  /* margin-top: 1rem; */
 }
 </style>

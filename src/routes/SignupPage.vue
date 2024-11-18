@@ -12,48 +12,6 @@ const email = ref('')
 const password = ref('')
 const passwordTwo = ref('')
 
-const validateUserCredentials = async (e, email, username, password, passwordTwo) => {
-  e.preventDefault()
-  const emailError = validateEmail(email)
-  const usernameError = validateUsername(username)
-  const passwordError = validatePassword(password)
-  if (emailError) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops',
-      text: emailError
-    })
-    return
-  }
-
-  if (usernameError) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops',
-      text: usernameError
-    })
-    return
-  }
-  if (password !== passwordTwo) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops',
-      text: 'Passwords are not matching.'
-    })
-    return
-  }
-  if (passwordError) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Oops',
-      text: passwordError
-    })
-    return
-  }
-  const response = await handleSignup()
-  console.log(response)
-}
-
 const validateEmail = (email) => {
   // eslint-disable-next-line no-useless-escape
   const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
@@ -88,6 +46,48 @@ const validatePassword = (password) => {
     return 'Password should include at least one number'
   }
   return ''
+}
+
+const validateUserCredentials = async (e, email, username, password, passwordTwo) => {
+  e.preventDefault()
+  const emailError = validateEmail(email)
+  const usernameError = validateUsername(username)
+  const passwordError = validatePassword(password)
+  if (emailError) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops',
+      text: emailError
+    })
+    return
+  }
+  if (usernameError) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops',
+      text: usernameError
+    })
+    return
+  }
+  if (passwordError) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops',
+      text: passwordError
+    })
+    return
+  }
+  if (password !== passwordTwo) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops',
+      text: 'Passwords are not matching.'
+    })
+    return
+  }
+
+  const response = await handleSignup()
+  console.log(response)
 }
 
 const handleSignup = async () => {
