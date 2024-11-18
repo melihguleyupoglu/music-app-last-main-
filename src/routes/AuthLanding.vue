@@ -4,11 +4,11 @@ import { RouterLink } from 'vue-router'
 
 <template>
   <div class="button__container">
-    <RouterLink to="/login">
+    <RouterLink class="routerlink" to="/login">
       <button class="login-button button generic-button" id="login-button">Login</button>
     </RouterLink>
 
-    <RouterLink class="router-signup-button" to="/signup">
+    <RouterLink class="routerlink" to="/signup">
       <button class="signup-button button generic-button" id="signup-button">Signup</button>
     </RouterLink>
   </div>
@@ -22,11 +22,7 @@ import { RouterLink } from 'vue-router'
   margin-top: 15%;
   gap: 30px;
 }
-#signup-button {
-  color: white;
-}
-
-#login-button {
+.routerlink {
   color: white;
 }
 </style>

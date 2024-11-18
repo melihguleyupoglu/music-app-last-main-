@@ -335,7 +335,7 @@ h2 {
   align-items: center;
 }
 
-.selection__ .generic-button {
+.selection .generic-button {
   background: none;
   border: none;
   padding: 0;
@@ -372,7 +372,7 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  margin-right: 25rem;
+  /* margin-right: 25rem; */
   gap: 30px;
   .generic__item {
     display: flex;
@@ -380,10 +380,6 @@ h2 {
     gap: 20px;
     align-items: center;
   }
-}
-
-.artist__image__container.list {
-  margin-right: 45rem;
 }
 
 .generic__item {
