@@ -494,4 +494,101 @@ h2 {
 body.light .generic-button:hover {
   outline: 2px solid black;
 }
+
+@media screen and (max-width: 1400px) {
+  .generic__image__container.grid {
+    column-gap: 70px;
+    row-gap: 40px;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .generic__image {
+    height: 120px;
+    width: 120px;
+  }
+
+  .generic-text {
+    font-size: 0.8rem;
+  }
+}
+
+@media screen and (max-width: 1080px) {
+  .generic__image__container.grid {
+    column-gap: 50px;
+    row-gap: 30px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .generic__image {
+    height: 100px;
+    width: 100px;
+  }
+
+  .generic-text {
+    font-size: 0.7rem;
+  }
+
+  .selection {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .generic__image__container.grid {
+    column-gap: 30px;
+    row-gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .generic__image {
+    height: 80px;
+    width: 80px;
+  }
+
+  .generic-text {
+    font-size: 0.6rem;
+  }
+
+  .selection {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .selection h2 {
+    grid-column: 1 / -1;
+    margin-bottom: 10px;
+  }
+
+  .selection .generic-button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .generic__image__container.grid {
+    column-gap: 20px;
+    row-gap: 15px;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .generic__image {
+    height: 60px;
+    width: 60px;
+  }
+
+  .generic-text {
+    font-size: 0.5rem;
+  }
+
+  .view__toggle {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .view__toggle .generic-button {
+    width: 100%;
+    margin: 5px 0;
+  }
+}
 </style>
