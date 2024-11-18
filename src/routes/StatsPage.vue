@@ -209,7 +209,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
         </div>
 
         <ul
-          class="track__image__container generic__image__container"
+          class="generic__image__container"
           :class="{ grid: isGrid, list: !isGrid }"
           v-if="selection === 'tracks'"
           style="list-style-type: none"
@@ -218,13 +218,13 @@ const setItemNumber = (newNumber: 15 | 25) => {
             <h2 class="generic__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
             <img
               :src="track.album.images[0].url"
-              class="track__image generic__image"
+              class="generic__image"
               :id="'track-' + index"
               @load="handleImageLoad($event)"
               :alt="`Album cover for ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`"
             />
-            <div class="generic__image__overlay"></div>
-            <p class="track__artist-text generic-text">
+            <div class="generic__image-overlay"></div>
+            <p class="generic-text">
               {{ index + 1 }}. {{ track.name }} by
               {{ track.artists.map((artist) => artist.name).join(', ') }}
             </p>
@@ -244,7 +244,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
               :id="'track-' + index"
               @load="handleImageLoad($event)"
             />
-            <div class="generic__image__overlay"></div>
+            <div class="generic__image-overlay"></div>
             <p class="generic-text">
               {{ index + 1 }}.
               {{ artist.name }}
