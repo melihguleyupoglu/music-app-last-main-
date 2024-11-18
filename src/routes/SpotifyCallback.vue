@@ -13,7 +13,6 @@ onMounted(async () => {
   if (accessToken) {
     spotifyStore.saveSpotifyAccessToken(accessToken)
 
-    console.log(accessToken)
     router.push({ path: '/stats' })
   } else {
     console.error("Access token hasn't received")

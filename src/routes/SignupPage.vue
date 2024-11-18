@@ -86,19 +86,18 @@ const validateUserCredentials = async (e, email, username, password, passwordTwo
     return
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const response = await handleSignup()
-  console.log(response)
 }
 
 const handleSignup = async () => {
-  console.log(username, email, password)
   try {
     const response = await axios.post('http://localhost:3000/signup', {
       username: username.value,
       email: email.value,
       password: password.value
     })
-    console.log(response)
+
     if (response.status === 200) {
       Swal.fire({
         title: 'Succesful',
