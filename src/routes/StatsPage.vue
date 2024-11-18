@@ -225,7 +225,8 @@ const setItemNumber = (newNumber: 15 | 25) => {
             />
             <div class="generic__image-overlay"></div>
             <p class="generic-text">
-              {{ index + 1 }}. {{ track.name }} by
+              <span style="font-weight: 900" v-if="isGrid">{{ index + 1 }}. </span
+              >{{ track.name }} by
               {{ track.artists.map((artist) => artist.name).join(', ') }}
             </p>
           </li>
@@ -366,14 +367,63 @@ h2 {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* margin-right: 25rem; */
   gap: 30px;
-  .generic__item {
-    display: flex;
-    flex-direction: row;
-    gap: 20px;
-    align-items: center;
-  }
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.generic__image__container.list .generic__item {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  align-items: center;
+  width: 100%;
+  position: relative;
+  padding: 10px;
+}
+
+.generic__image__container.list .generic__ranking {
+  min-width: 40px;
+  font-size: 1.5rem;
+  text-align: right;
+}
+
+.generic__image__container.list .generic__image {
+  width: 100px;
+  height: 100px;
+  flex-shrink: 0;
+}
+
+.generic__image__container.list .generic__image-overlay {
+  width: 100px;
+  height: 100px;
+}
+
+.generic__image__container.list .generic-text {
+  flex-grow: 1;
+  font-size: 1.1rem;
+  margin: 0;
+  padding-right: 20px;
+}
+
+.generic__image__container.list .generic__item:hover {
+  scale: 1.02;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+
+.generic__image__container.grid .generic__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.generic__image__container.grid .generic-text {
+  margin-top: 10px;
+  font-size: 0.9rem;
+  line-height: 1.4;
 }
 
 .generic__item {
