@@ -98,7 +98,6 @@ const handleImageLoad = (event: Event) => {
 
 const setSelection = (newSelection: 'tracks' | 'artists') => {
   selection.value = newSelection
-  console.log(selection.value)
 }
 
 const setTimeRange = (newTimeRange: 'short_term' | 'medium_term' | 'long_term') => {
@@ -118,7 +117,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
       <div class="selection selection__first">
         <h2 class="grid-first">Type:</h2>
         <button
-          class="generic-button selection__first-first-button grid-second"
+          class="generic-button grid-second"
           @click="setSelection('tracks')"
           :class="{ active: selection === 'tracks' }"
           :aria-pressed="selection === 'tracks' ? 'true' : 'false'"
@@ -126,7 +125,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Tracks
         </button>
         <button
-          class="generic-button selection__first-second-button grid-third"
+          class="generic-button grid-third"
           @click="setSelection('artists')"
           :class="{ active: selection === 'artists' }"
           :aria-pressed="selection === 'artists' ? 'true' : 'false'"
@@ -137,7 +136,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
       <div class="selection selection__second">
         <h2 class="grid-first">Time Range:</h2>
         <button
-          class="generic-button selection__second-first-button grid-second"
+          class="generic-button grid-second"
           @click="setTimeRange('short_term')"
           :class="{ active: timeRange === 'short_term' }"
           :aria-pressed="timeRange === 'short_term' ? 'true' : 'false'"
@@ -145,7 +144,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Last Month
         </button>
         <button
-          class="generic-button selection__second-second-button grid-third"
+          class="generic-button grid-third"
           @click="setTimeRange('medium_term')"
           :class="{ active: timeRange === 'medium_term' }"
           :aria-pressed="timeRange === 'medium_term' ? 'true' : 'false'"
@@ -153,7 +152,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           Last 6 Months
         </button>
         <button
-          class="generic-button selection__second-third-button grid-fourth"
+          class="generic-button grid-fourth"
           @click="setTimeRange('long_term')"
           :class="{ active: timeRange === 'long_term' }"
           :aria-pressed="timeRange === 'long_term' ? 'true' : 'false'"
@@ -164,7 +163,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
       <div class="selection selection__third">
         <h2 class="grid-first">Stat Number:</h2>
         <button
-          class="generic-button selection__third-first-button grid-second"
+          class="generic-button grid-second"
           @click="setItemNumber(15)"
           :class="{ active: itemNumber === 15 }"
           :aria-pressed="itemNumber === 15 ? 'true' : 'false'"
@@ -172,7 +171,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
           15
         </button>
         <button
-          class="generic-button selection__third-second-button grid-third"
+          class="generic-button grid-third"
           @click="setItemNumber(25)"
           :class="{ active: itemNumber === 25 }"
           :aria-pressed="itemNumber === 25 ? 'true' : 'false'"
@@ -183,7 +182,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
       <div class="button__container">
         <button
           @click="handleButtonClick"
-          class="generic-button submit__button grid-second-third"
+          class="generic-button grid-second-third"
           aria-label="Get your stats"
         >
           Get my stats
@@ -215,8 +214,8 @@ const setItemNumber = (newNumber: 15 | 25) => {
           v-if="selection === 'tracks'"
           style="list-style-type: none"
         >
-          <li v-for="(track, index) in topTracks" :key="track.id" class="track__item generic__item">
-            <h2 class="track__ranking generic__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
+          <li v-for="(track, index) in topTracks" :key="track.id" class="generic__item">
+            <h2 class="generic__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
             <img
               :src="track.album.images[0].url"
               class="track__image generic__image"
@@ -224,7 +223,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
               @load="handleImageLoad($event)"
               :alt="`Album cover for ${track.name} by ${track.artists.map((artist) => artist.name).join(', ')}`"
             />
-            <div class="track__image-overlay generic__image__overlay"></div>
+            <div class="generic__image__overlay"></div>
             <p class="track__artist-text generic-text">
               {{ index + 1 }}. {{ track.name }} by
               {{ track.artists.map((artist) => artist.name).join(', ') }}
@@ -232,25 +231,21 @@ const setItemNumber = (newNumber: 15 | 25) => {
           </li>
         </ul>
         <ul
-          class="artist__image__container generic__image__container"
+          class="generic__image__container"
           :class="{ grid: isGrid, list: !isGrid }"
           style="list-style-type: none"
           v-if="selection === 'artists'"
         >
-          <li
-            v-for="(artist, index) in topArtists"
-            :key="artist.id"
-            class="artist__item generic__item"
-          >
-            <h2 class="artist__ranking generic__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
+          <li v-for="(artist, index) in topArtists" :key="artist.id" class="generic__item">
+            <h2 class="generic__ranking" v-if="!isGrid">{{ index + 1 }}</h2>
             <img
               :src="artist.images[0].url"
-              class="artist__image generic__image"
+              class="generic__image"
               :id="'track-' + index"
               @load="handleImageLoad($event)"
             />
-            <div class="artist__image-overlay generic__image__overlay"></div>
-            <p class="artist__text generic-text">
+            <div class="generic__image__overlay"></div>
+            <p class="generic-text">
               {{ index + 1 }}.
               {{ artist.name }}
             </p>
