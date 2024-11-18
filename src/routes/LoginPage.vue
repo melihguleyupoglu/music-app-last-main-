@@ -11,13 +11,12 @@ const password = ref('')
 
 const handleLogin = async (e: Event) => {
   e.preventDefault()
-  console.log(username, password)
   try {
     const response = await axios.post('http://localhost:3000/login', {
       username: username.value,
       password: password.value
     })
-    console.log(response.data)
+
     if (response.status === 200) {
       router.push('/home')
     }
@@ -27,7 +26,6 @@ const handleLogin = async (e: Event) => {
       title: 'Oops',
       text: err
     })
-    console.log(err)
   }
 }
 </script>
