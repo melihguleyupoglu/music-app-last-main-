@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useLoadingStateStore } from '../store/loadingStateStore'
-import { gridAnimation } from '../utils/animations.js'
 import { spotifyStore } from '../main'
 
 interface Artist {
@@ -26,18 +25,21 @@ interface Track {
 }
 
 const loadingStateStore = useLoadingStateStore()
-const token = spotifyStore.spotifyAccessToken
+const spotifyAccessToken = spotifyStore.spotifyAccessToken
+
 const topTracks = ref<Track[]>([])
 const topArtists = ref<Artist[]>([])
+
 const selection = ref<'tracks' | 'artists'>('tracks')
 const timeRange = ref<'short_term' | 'medium_term' | 'long_term'>('short_term')
-const isGrid = ref(true)
 const itemNumber = ref(15)
+
+const isGrid = ref(true)
 
 async function fetchWebApi(endpoint: string, method: string, body: object) {
   const res = await fetch(`https://api.spotify.com/${endpoint}`, {
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${spotifyAccessToken}`,
       'Content-Type': 'application/json'
     },
     method,
@@ -50,7 +52,7 @@ async function fetchWebApi(endpoint: string, method: string, body: object) {
 }
 
 const getTopStats = async () => {
-  if (!token) {
+  if (!spotifyAccessToken) {
     console.error('Access token not found')
     return []
   }
@@ -83,7 +85,6 @@ const getSelectedStats = async () => {
 
 const handleButtonClick = async () => {
   await getSelectedStats()
-  console.log(topArtists)
 }
 
 const toggleView = () => {
@@ -93,8 +94,6 @@ const toggleView = () => {
 const handleImageLoad = (event: Event) => {
   const imgElement = event.target as HTMLImageElement
   imgElement.parentElement?.classList.add('loaded')
-  gridAnimation('.track__image__container', 3, 5)
-  gridAnimation('.artist__image__container', 2, 5)
 }
 
 const setSelection = (newSelection: 'tracks' | 'artists') => {
