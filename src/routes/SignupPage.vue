@@ -218,15 +218,6 @@ input {
   text-align: center;
 }
 
-.create-acc-button {
-  margin-top: 1%;
-  height: 30px;
-  width: 10%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
@@ -237,10 +228,6 @@ input {
   clip: rect(0, 0, 0, 0);
   white-space: nowrap;
   border: 0;
-}
-
-.generic-label {
-  font-size: large;
 }
 
 input {
