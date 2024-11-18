@@ -8,14 +8,14 @@ const router = useRouter()
 onMounted(async () => {
   const hash = window.location.hash.substring(1)
   const params = new URLSearchParams(hash)
-  const accessToken = params.get('access_token')
+  const spotifyAccessToken = params.get('access_token')
 
-  if (accessToken) {
-    spotifyStore.saveSpotifyAccessToken(accessToken)
+  if (spotifyAccessToken) {
+    spotifyStore.saveSpotifyAccessToken(spotifyAccessToken)
 
     router.push({ path: '/stats' })
   } else {
-    console.error("Access token hasn't received")
+    router.push({ path: '/home' })
   }
 })
 </script>
