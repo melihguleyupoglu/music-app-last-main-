@@ -62,11 +62,6 @@ body.light-mode {
   .logo-anchor:hover {
     outline: 2px solid black;
   }
-  .generic__item:hover {
-    .generic__image {
-      outline: 3px solid black;
-    }
-  }
 }
 
 body.light-mode #signup-button:hover,

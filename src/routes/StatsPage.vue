@@ -345,7 +345,6 @@ h2 {
 
 .generic-button.active {
   font-weight: bold;
-  outline: none;
 }
 
 .generic-button:hover {
@@ -410,7 +409,7 @@ h2 {
 .generic__image__container.list .generic__item:hover {
   scale: 1.02;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 1px;
+  border-radius: 5px;
   .generic__image {
     outline: none;
   }
@@ -432,12 +431,6 @@ h2 {
 .generic__item {
   position: relative;
   transition: transform 0.5s ease-in-out;
-}
-
-.generic__item:hover {
-  .generic__image {
-    outline: 3px solid white;
-  }
 }
 
 .generic__image {
@@ -496,6 +489,13 @@ h2 {
 
 body.light .generic-button:hover {
   outline: 2px solid black;
+}
+
+body.light {
+  .generic__image__container.list .generic__item:hover {
+    background-color: gainsboro;
+    border-radius: 5px;
+  }
 }
 
 @media screen and (max-width: 1400px) {
