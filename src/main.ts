@@ -65,7 +65,6 @@ watch(isDarkMode, (isDarkModeNew) => {
 router.beforeEach(async (to, from, next) => {
   const accessToken = await api.fetchAccessToken() //get the accessToken from cookie
   const tempIsDark = localStorage.getItem('localIsDarkMode')
-  console.log(tempIsDark)
   if (tempIsDark === 'false') {
     bodyClass.add('light-mode')
     uiStore.setDarkMode(false)
@@ -81,13 +80,11 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some((record) => record.meta.requiresAuth)) {
     try {
       const verifyResponse = await api.verifyAccessToken()
-
       if (verifyResponse && verifyResponse.message === 'Access token is valid') {
         next()
       } else {
         const newAccessToken = await api.refreshAccessToken()
         if (newAccessToken) {
-          // mainAuthStore.setAccessToken(newAccessToken)
           next()
         } else {
           next('/login')

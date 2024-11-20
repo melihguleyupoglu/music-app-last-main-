@@ -247,8 +247,7 @@ const setItemNumber = (newNumber: 15 | 25) => {
             />
             <div class="generic__image-overlay"></div>
             <p class="generic-text">
-              {{ index + 1 }}.
-              {{ artist.name }}
+              <span style="font-weight: 900" v-if="isGrid">{{ index + 1 }}. </span>{{ artist.name }}
             </p>
           </li>
         </ul>
