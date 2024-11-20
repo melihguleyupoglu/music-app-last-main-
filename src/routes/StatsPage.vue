@@ -410,7 +410,10 @@ h2 {
 .generic__image__container.list .generic__item:hover {
   scale: 1.02;
   background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
+  border-radius: 1px;
+  .generic__image {
+    outline: none;
+  }
 }
 
 .generic__image__container.grid .generic__item {
