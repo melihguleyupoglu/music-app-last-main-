@@ -62,6 +62,11 @@ body.light-mode {
   .logo-anchor:hover {
     outline: 2px solid black;
   }
+
+  .generic__image__container.list .generic__item:hover {
+    background-color: gainsboro;
+    border-radius: 5px;
+  }
 }
 
 body.light-mode #signup-button:hover,

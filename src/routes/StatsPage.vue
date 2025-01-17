@@ -409,9 +409,6 @@ h2 {
   scale: 1.02;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 5px;
-  .generic__image {
-    outline: none;
-  }
 }
 
 .generic__image__container.grid .generic__item {
@@ -488,13 +485,6 @@ h2 {
 
 body.light .generic-button:hover {
   outline: 2px solid black;
-}
-
-body.light {
-  .generic__image__container.list .generic__item:hover {
-    background-color: gainsboro;
-    border-radius: 5px;
-  }
 }
 
 @media screen and (max-width: 1400px) {
